@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Behavioral data preprocessing for CCA and other statistic learning methods
 
@@ -28,8 +27,8 @@ If you are using the preprocessed data for Sparse-CCA:
 	-In other words, the same participant should have the same id across those two set of data.
 
 """
-
-behavData_xlsx = 'CS_SCCA_MINDW_SEM_BEHAV_TEXT_N138_05.04.16_correctID.xlsx'
+missing = False
+behavData_xlsx = 'MWQ_allcomp.xlsx'
 
 #Keywords in the selected variable, they have to match the exact name in the file               
 #the first key you select must be the id
@@ -38,8 +37,8 @@ selectedKeys = ['IDNO',
 				]
 
 #optional: name the selected behavioral data; can leave unchanged
-keysfn = 'select_keys_MWQ.pkl'	#must end with .plk
-selectdatafn = 'select_data_MWQ.pkl'
+keysfn = 'select_keys_MWQ_mean'	#must end with .plk
+selectdatafn = 'select_data_MWQ_mean'
 
 #Run the script after changing the things above
 
@@ -63,7 +62,8 @@ for s in selectedKeys:
 
 #save as pickle
 prep_keys = np.array(includeKeys)
-joblib.dump(prep_keys, keysfn)
+np.save(keysfn, prep_keys)
+
 
 #clean data
 #get the variable we are including
@@ -82,14 +82,15 @@ excludeIdx = np.array(excludeIdx)
 #exclude the participants
 data = np.delete(cs_include, excludeIdx, 0)
 
-#replace NaNs with means of the variables
-from sklearn.preprocessing import Imputer
+if missing:
+	#replace NaNs with means of the variables
+	from sklearn.preprocessing import Imputer
+	imp = Imputer(missing_values='NaN', strategy='mean', axis=0)
+	data_impute = imp.fit_transform(data)
+	data_og = data
+	data = data_impute
 
-imp = Imputer(missing_values='NaN', strategy='mean', axis=0)
-
-data_impute = imp.fit_transform(data)
-joblib.dump(data_impute, selectdatafn)
-
+np.save(selectdatafn, data)
 # #demean
 # idno = data_impute[:,0]
 # mean = data_impute[:,1:].mean(axis=0)

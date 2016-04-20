@@ -1,7 +1,8 @@
 DATA_DIR = 'U:\\PhDProjects\\CS_Analysis\\CS_brain_preprocessed'
-ATLAS_DIR = 'U:\\PhDProjects\\Project_CCA\\Yeo15_DMN_6ROIs\\*.nii'
-roiLabel = 'U:\\PhDProjects\\Project_CCA\\Yeo15_DMN_6ROIs\\Yeo15_DMN_6ROIs_lables.nii.gz'
-crosscorr = 'cs_cross_corr_Yeo15_DMN_6ROIs'
+ATLAS_DIR = 'U:\\PhDProjects\\Project_CCA\\Beth_Semantic\\*.nii'
+roiLabel = 'U:\\PhDProjects\\Project_CCA\\Beth_Semantic\\Beth_Semantic14_lables.nii.gz'
+crosscorr = 'cs_cross_corr_Beth_Semantic14'
+
 #########################################################################################
 import glob
 import os
@@ -10,7 +11,8 @@ from nilearn.image import resample_img, index_img
 import nibabel as nib
 from nilearn.input_data import NiftiLabelsMasker
 
-rs_niis = glob.glob(DATA_DIR + os.sep + '*.nii.gz')
+#rs_niis = glob.glob(DATA_DIR + os.sep + '*.nii.gz')
+rs_niis = sorted(glob.glob(DATA_DIR + os.sep + '*.nii.gz')) #windows
 tmp_nii_path = rs_niis[0]
 tmp_nii = nib.load(tmp_nii_path)
 
@@ -22,11 +24,13 @@ elif ATLAS_DIR.split('.')[-1]== '.gz':
     fform = '.nii.gz'
 else:
     print 'You are not loading NIFTI files'
+    print fform
 
-
-atlas_nii = glob.glob(ATLAS_DIR)
+# atlas_nii = glob.glob(ATLAS_DIR)
+atlas_nii = sorted(glob.glob(ATLAS_DIR)) #windows
 atlas_names = [roi.split(os.sep)[-1].split(fform)[0]  for roi in atlas_nii]
 atlas_names = np.array(atlas_names)
+np.save(crosscorr+'_ROIS', atlas_names)
 
 if ATLAS_DIR.split('.')[-1]== 'nii':
     re_atlas_nii = []
@@ -55,7 +59,8 @@ elif ATLAS_DIR.split('.')[-1]== '.gz':
 else:
     print 'You are not loading NIFTI files'
 
-atlas_re_nii = glob.glob(RE_ATLAS_DIR)
+#atlas_re_nii = glob.glob(RE_ATLAS_DIR)
+atlas_re_nii = sorted(glob.glob(RE_ATLAS_DIR))  #windows
 
 
 # parse the time series from our atlas
@@ -96,19 +101,9 @@ for i_rs_img, rs_img in enumerate(rs_niis):
     corr_mat_vect = corr_mat[triu_inds]
     # save for later
     corr_mat_vect_list.append(corr_mat_vect)
-
-    #for sanity check: if the data is ordered in participant number
-    corr_ID = int(rs_img.split(os.sep)[-1].split('_')[0])
-    ind_list.append(corr_ID-1)
-
 corr_mat_vect_array = np.array(corr_mat_vect_list)
-#sanity check
-corr_mat_vect_array_order = np.zeros(corr_mat_vect_array.shape)
-corr_mat_vect_array_order[ind_list,:] = corr_mat_vect_array[:,:]
-print(corr_mat_vect_array_order.shape)
-
-np.save(crosscorr, corr_mat_vect_array_order)
+print(corr_mat_vect_array.shape)
+np.save(crosscorr, corr_mat_vect_array)
 
 reg_reg_names = [atlas_names[a] + ' vs ' + atlas_names[b] for (a,b) in zip(triu_inds[0], triu_inds[1])]
-
 np.save(crosscorr+'_keys', reg_reg_names)
