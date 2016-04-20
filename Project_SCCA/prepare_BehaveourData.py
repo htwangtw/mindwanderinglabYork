@@ -1,8 +1,8 @@
 """
-Behavioral data preprocessing for CCA and other statistic learning methods
+Behavioral data preprocessing for CCA and other stuff (potentially)
 
 Created on Wed 24 Feb 13:43:09 2016
-Last updated on Thu 11th of Mar 2016
+Last updated on Thu 21th of Apr 2016
 
 @author: Haoting
 
@@ -27,7 +27,8 @@ If you are using the preprocessed data for Sparse-CCA:
 	-In other words, the same participant should have the same id across those two set of data.
 
 """
-missing = False
+missing = True
+WD = 'U:\\PhDProjects\\Project_CCA'
 behavData_xlsx = 'MWQ_allcomp.xlsx'
 
 #Keywords in the selected variable, they have to match the exact name in the file               
@@ -36,8 +37,8 @@ selectedKeys = ['IDNO',
 				'MWQ_'
 				]
 
-#optional: name the selected behavioral data; can leave unchanged
-keysfn = 'select_keys_MWQ_mean'	#must end with .plk
+#optional: name the selected behavioral data; can leave unchanged; this will save data as .npy files
+keysfn = 'select_keys_MWQ_mean'
 selectdatafn = 'select_data_MWQ_mean'
 
 #Run the script after changing the things above
@@ -46,7 +47,9 @@ selectdatafn = 'select_data_MWQ_mean'
 import pandas as pd
 import numpy as np
 import joblib
+import os
 
+os.chdir(WD)
 #Load raw data
 data_raw = pd.read_excel(behavData_xlsx)
 data_raw = data_raw.convert_objects(convert_numeric=True)
@@ -64,10 +67,8 @@ for s in selectedKeys:
 prep_keys = np.array(includeKeys)
 np.save(keysfn, prep_keys)
 
-
 #clean data
 #get the variable we are including
-
 cs_include = data_raw[includeKeys].values
 
 #exclde cases with more than 10 nan
@@ -91,13 +92,4 @@ if missing:
 	data = data_impute
 
 np.save(selectdatafn, data)
-# #demean
-# idno = data_impute[:,0]
-# mean = data_impute[:,1:].mean(axis=0)
-# demean = data_impute[:,1:] - mean[np.newaxis,:]
-# data_dm= np.column_stack((idno,demean))
-# #save data as pickles
-# joblib.dump(data_dm, 'cs_select17_data_dm.pkl')
-
-
 

@@ -1,7 +1,26 @@
+"""
+Time series preprocessing for CCA and other stuff (potentially)
+
+Created on Wed 24 Feb 13:43:09 2016
+Last updated on Wed 20th of Apr 2016
+
+@author: Danilo Bzdok; mentained by Haoting
+
+Please ensure the following packages are installed if you are running on your personal machine:
+	numpy, nilearn, nibable
+
+If you are using the preprocessed data for Sparse-CCA:
+	-The id should match the subject id of the imaging data or the other set of behavioral data.
+	-In other words, the same participant should have the same id across those two set of data.
+
+"""
+
+WD = 'U:\\PhDProjects\\Project_CCA'
 DATA_DIR = 'U:\\PhDProjects\\CS_Analysis\\CS_brain_preprocessed'
-ATLAS_DIR = 'U:\\PhDProjects\\Project_CCA\\Beth_Semantic\\*.nii'
-roiLabel = 'U:\\PhDProjects\\Project_CCA\\Beth_Semantic\\Beth_Semantic14_lables.nii.gz'
-crosscorr = 'cs_cross_corr_Beth_Semantic14'
+ATLAS_DIR = 'U:\\PhDProjects\\Project_CCA\\Bzdok_DMN\\*.nii'
+roiLabel = 'U:\\PhDProjects\\Project_CCA\\Bzdok_DMN\\Bzdok_DMN14_lables.nii.gz'
+#name: [project]_cross_corr_[chosen masks][number of the regions]
+crosscorr = 'cs_cross_corr_Bzdok_DMN14'
 
 #########################################################################################
 import glob
@@ -11,6 +30,7 @@ from nilearn.image import resample_img, index_img
 import nibabel as nib
 from nilearn.input_data import NiftiLabelsMasker
 
+os.chdir(WD)
 #rs_niis = glob.glob(DATA_DIR + os.sep + '*.nii.gz')
 rs_niis = sorted(glob.glob(DATA_DIR + os.sep + '*.nii.gz')) #windows
 tmp_nii_path = rs_niis[0]
