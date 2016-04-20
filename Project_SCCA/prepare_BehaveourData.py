@@ -28,6 +28,7 @@ If you are using the preprocessed data for Sparse-CCA:
 
 """
 missing = False
+WD = 'U:\\PhDProjects\\Project_CCA'
 behavData_xlsx = 'MWQ_allcomp.xlsx'
 
 #Keywords in the selected variable, they have to match the exact name in the file               
@@ -46,7 +47,9 @@ selectdatafn = 'select_data_MWQ_mean'
 import pandas as pd
 import numpy as np
 import joblib
+import os
 
+os.chdir(WD)
 #Load raw data
 data_raw = pd.read_excel(behavData_xlsx)
 data_raw = data_raw.convert_objects(convert_numeric=True)

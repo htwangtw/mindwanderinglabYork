@@ -1,7 +1,7 @@
-n_components = 8
+n_components = 5
 pen_brain = 0.1
 pen_behave = 0.3
-SCCA_exp_var_check = True
+SCCA_exp_var_check = False
 
 WD = 'U:\\PhDProjects\\Project_CCA'
 '''
@@ -59,12 +59,18 @@ os.chdir(WD)
 
 
 #load data
+
 keys = np.load(expanduser(keysfn))
 behavioral_data = np.load(expanduser(behavefn))
-
+#HT: MWQPCA
 subjet_subset = behavioral_data[:, 0].astype('i4') - 1
-keys = keys[1:]
-behavioral_data = behavioral_data[:, 1:]
+keys = keys[5:]
+behavioral_data = behavioral_data[:, 5:]
+# #use these if you created the files correctly
+# keys = keys[1:]
+# behavioral_data = behavioral_data[:, 1:]
+
+limit_exp_var = len(keys) #save for later
 
 rest_data = np.load(expanduser(rscorrfn))
 
@@ -153,19 +159,26 @@ from sklearn.linear_model import LinearRegression
 
 exp_var_X = []
 exp_var_Y = []
-for i in range(1, 31):
+
+if SCCA_exp_var_check==False:
+	limit_exp_var = 30
+	
+for i in range(1, limit_exp_var+1):
     if SCCA_exp_var_check:
+
+    	n_com = i
         com.r(
-        """
-        out <- CCA(x = X, z = Y, K = %i, niter = 100, standardize = FALSE,
-                   penaltyx = %f, penaltyz = %f)
-        print(out,verbose=TRUE)
-        """ % (i, pen_brain, pen_behave))
+	        """
+	        out <- CCA(x = X, z = Y, K = %i, niter = 100, standardize = FALSE,
+	                   penaltyx = %f, penaltyz = %f)
+	        print(out,verbose=TRUE)
+	        """ % (n_com, pen_brain, pen_behave))
         # convert the results back to dataframes and then to numpy arrays
         df_u = com.convert_robj(com.r('out[1]'))['u']
         df_v = com.convert_robj(com.r('out[2]'))['v']
         x_loadings = df_u.as_matrix()
         y_loadings = df_v.as_matrix()
+
     else:
         # Set up Pyrcca
         cca = rcca.CCA(kernelcca=False, numCC=i, reg=1.)
@@ -189,10 +202,10 @@ for i in range(1, 31):
 
 
 plt.figure()
-plt.plot(np.arange(30) + 1, exp_var_X, label='Brain exp var')
-plt.plot(np.arange(30) + 1, exp_var_Y, label='Behavioral exp var')
+plt.plot(np.arange(limit_exp_var) + 1, exp_var_X, label='Brain exp var')
+plt.plot(np.arange(limit_exp_var) + 1, exp_var_Y, label='Behavioral exp var')
 plt.ylim(-0.1, 1)
-plt.xlim(1, 30)
+plt.xlim(1, limit_exp_var)
 plt.legend(loc='lower right')
 plt.savefig('exp_var.pdf')
 plt.close('all')
