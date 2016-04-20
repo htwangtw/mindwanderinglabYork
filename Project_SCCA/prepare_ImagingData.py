@@ -18,7 +18,8 @@ If you are using the preprocessed data for Sparse-CCA:
 WD = 'U:\\PhDProjects\\Project_CCA'
 DATA_DIR = 'U:\\PhDProjects\\CS_Analysis\\CS_brain_preprocessed'
 ATLAS_DIR = 'U:\\PhDProjects\\Project_CCA\\Bzdok_DMN\\*.nii'
-roiLabel = 'U:\\PhDProjects\\Project_CCA\\Bzdok_DMN\\Bzdok_DMN14_lables.nii.gz'
+#keep the atlas folder clean is a good idea
+roiLabel = 'U:\\PhDProjects\\Project_CCA\\Bzdok_DMN14_lables.nii.gz'
 #name: [project]_cross_corr_[chosen masks][number of the regions]
 crosscorr = 'cs_cross_corr_Bzdok_DMN14'
 
@@ -122,7 +123,8 @@ for i_rs_img, rs_img in enumerate(rs_niis):
     # save for later
     corr_mat_vect_list.append(corr_mat_vect)
 corr_mat_vect_array = np.array(corr_mat_vect_list)
-print(corr_mat_vect_array.shape)
+#the shpae should be 'number of ppt' by '[(number of regions)**2 - number of regions]/2'
+print(corr_mat_vect_array.shape) 
 np.save(crosscorr, corr_mat_vect_array)
 
 reg_reg_names = [atlas_names[a] + ' vs ' + atlas_names[b] for (a,b) in zip(triu_inds[0], triu_inds[1])]
