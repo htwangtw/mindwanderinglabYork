@@ -17,10 +17,10 @@ If you are using the preprocessed data for Sparse-CCA:
 
 WD = 'U:\\PhDProjects\\Project_CCA'
 DATA_DIR = 'U:\\PhDProjects\\CS_Analysis\\CS_brain_preprocessed'
-ATLAS_DIR = 'U:\\PhDProjects\\Project_CCA\\Beth_Semantic\\*.nii'
-roiLabel = 'U:\\PhDProjects\\Project_CCA\\Beth_Semantic\\Beth_Semantic14_lables.nii.gz'
+ATLAS_DIR = 'U:\\PhDProjects\\Project_CCA\\Bzdok_DMN\\*.nii'
+roiLabel = 'U:\\PhDProjects\\Project_CCA\\Bzdok_DMN\\Bzdok_DMN14_lables.nii.gz'
 #name: [project]_cross_corr_[chosen masks][number of the regions]
-crosscorr = 'cs_cross_corr_Beth_Semantic14'
+crosscorr = 'cs_cross_corr_Bzdok_DMN14'
 
 #########################################################################################
 import glob
