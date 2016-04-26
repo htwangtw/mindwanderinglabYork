@@ -14,6 +14,7 @@ n_areas = 14
 
 WD = 'U:\\PhDProjects\\Project_CCA'
 behavefn = 'select_data_MWQ_sessionMean.npy' 
+beh_keysfn = 'select_keys_MWQ.npy'
 rscorrfn = 'cs_cross_corr_Bzdok_DMN14.npy'
 exp_var_fn = 'BzdokDMN14_MWQ_exp_var_penBrain%1.1f_penBehav%1.1f.pdf' %(pen_brain, pen_behave)
 
@@ -43,7 +44,7 @@ os.chdir(WD)
 
 
 #load data
-all_keys = np.load(expanduser(keysfn))
+all_keys = np.load(expanduser(beh_keysfn))
 all_behavioral_data = np.load(expanduser(behavefn))
 subjet_subset = all_behavioral_data[:, 0].astype('i4') - 1
 keys = all_keys[1:] #the first column is the scan id
