@@ -28,18 +28,19 @@ If you are using the preprocessed data for Sparse-CCA:
 
 """
 missing = True
+excludeNaN = False
 WD = 'U:\\PhDProjects\\Project_CCA'
-behavData_xlsx = 'MWQ_allcomp.xlsx'
+behavData_xlsx = 'mwq.raw_completeP145_corrected_sessionMean.xlsx'
 
 #Keywords in the selected variable, they have to match the exact name in the file               
 #the first key you select must be the id
-selectedKeys = ['IDNO',
-				'MWQ_'
+selectedKeys = ['SCAN_ID',
+				'MWQ'
 				]
 
 #optional: name the selected behavioral data; can leave unchanged; this will save data as .npy files
-keysfn = 'select_keys_MWQ_mean'
-selectdatafn = 'select_data_MWQ_mean'
+keysfn = 'select_keys_MWQ_sessionMean'
+selectdatafn = 'select_data_MWQ_sessionMean'
 
 #Run the script after changing the things above
 
@@ -71,17 +72,21 @@ np.save(keysfn, prep_keys)
 #get the variable we are including
 cs_include = data_raw[includeKeys].values
 
-#exclde cases with more than 10 nan
-excludeIdx = []
-for i in range(cs_include.shape[0]):
-    n = np.count_nonzero(np.isnan(cs_include)[i])
-    if n>10:
-        excludeIdx.append(i)
+if excludeNaN:
+	#exclde cases with more than 10 nan
+	excludeIdx = []
+	for i in range(cs_include.shape[0]):
+	    n = np.count_nonzero(np.isnan(cs_include)[i])
+	    if n>10:
+	        excludeIdx.append(i)
 
-excludeIdx = np.array(excludeIdx)
+	excludeIdx = np.array(excludeIdx)
 
-#exclude the participants
-data = np.delete(cs_include, excludeIdx, 0)
+	#exclude the participants
+	data = np.delete(cs_include, excludeIdx, 0)
+else:
+	data = cs_include
+
 
 if missing:
 	#replace NaNs with means of the variables

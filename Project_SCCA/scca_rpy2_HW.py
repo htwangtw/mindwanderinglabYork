@@ -1,24 +1,24 @@
-n_components = 5
-pen_brain = 0.1
-pen_behave = 0.7
+n_components = 6
+pen_brain = 0.3
+pen_behave = 0.5
 
 WD = 'U:\\PhDProjects\\Project_CCA'
 '''
 the included behavioural data should be only the variables/tasks 
 you are looking at in this analysis.
 '''
-keysfn = 'select_keys_MWQ_mean.npy'
-behavefn = 'select_data_MWQ_mean.npy'
-# keysfn = 'select_keys_MWQ.npy'
-# behavefn = 'select_data_MWQ.npy' 
+# keysfn = 'select_keys_MWQ_PCA.npy'
+# behavefn = 'select_data_MWQ_PCA.npy'
+keysfn = 'select_keys_MWQ.npy'
+behavefn = 'select_data_MWQ_sessionMean.npy' 
 
-n_areas = 18
-rscorrfn = 'cs_cross_corr_Bzdok_DMN18.npy'
-corr_keys_fn = 'cs_cross_corr_Bzdok_DMN18_keys.npy'
-region_labels_fn = 'cs_cross_corr_Bzdok_DMN18_ROIS.npy'
+n_areas = 14
+rscorrfn = 'cs_cross_corr_Bzdok_DMN14.npy'
+corr_keys_fn = 'cs_cross_corr_Bzdok_DMN14_keys.npy'
+region_labels_fn = 'cs_cross_corr_Bzdok_DMN14_ROIS.npy'
 #format: [imaging data mask]_[behavioral data]_[penalty-brain]_[penalty-behavior](_othernotes).pdf
-result_corr_fn = 'BzdokDMN_MWQ_penBrain%1.1f_penBehav%1.1f_nComponets%1.0f_color.pdf' %(pen_brain, pen_behave, n_components)
-exp_var_fn = 'BzdokDMN_MWQ_exp_var_penBrain%1.1f_penBehav%1.1f.pdf' %(pen_brain, pen_behave)
+result_corr_fn = 'BzdokDMN14_MWQ_S1_penBrain%1.1f_penBehav%1.1f_nComponets%1.0f.pdf' %(pen_brain, pen_behave, n_components)
+# exp_var_fn = 'BzdokDMN14_MWQ_exp_var_penBrain%1.1f_penBehav%1.1f.pdf' %(pen_brain, pen_behave)
 
 
 # n_areas = 14
@@ -59,15 +59,32 @@ os.chdir(WD)
 
 #load data
 
-keys = np.load(expanduser(keysfn))
-behavioral_data = np.load(expanduser(behavefn))
+all_keys = np.load(expanduser(keysfn))
+all_behavioral_data = np.load(expanduser(behavefn))
+subjet_subset = all_behavioral_data[:138, 0].astype('i4') - 1
 #HT: MWQPCA
-subjet_subset = behavioral_data[:, 0].astype('i4') - 1
 # keys = keys[5:]
 # behavioral_data = behavioral_data[:, 5:]
 #use these if you created the files correctly
-keys = keys[1:14]
-behavioral_data = behavioral_data[:, 1:14]
+keys = all_keys[1:]
+# #S1
+# behavioral_data = all_behavioral_data[:138, 1:14]
+# #S2
+# behavioral_data = all_behavioral_data[:138, 14:27]
+#S3
+behavioral_data = all_behavioral_data[:138, 27:40]
+# #all sessions
+# behavioral_data = all_behavioral_data[:138, 40:53]
+
+# # no S1
+# behavioral_data = (all_behavioral_data[:138, 14:27] + all_behavioral_data[:138, 27:40])/2
+# # no S2
+# behavioral_data = (all_behavioral_data[:138, 1:14] + all_behavioral_data[:138, 27:40])/2
+# # no S3
+# behavioral_data = (all_behavioral_data[:138, 1:14] + all_behavioral_data[:138, 14:27])/2
+
+
+
 
 limit_exp_var = len(keys) #save for later
 
@@ -109,6 +126,9 @@ df_v = com.convert_robj(com.r('out[2]'))['v']
 x_loadings = df_u.as_matrix()
 y_loadings = df_v.as_matrix()
 
+
+brain_loadings_s3 = x_loadings
+MWQ_loadings_s3 = y_loadings
 # #for future use; weighted timeseries
 # np.save('brain_SCCAloading',x_loadings)
 # np.save('behavior_SCCAloading',y_loadings)
@@ -125,33 +145,62 @@ for i in range(n_components):
 
 region_labels = np.load(expanduser(region_labels_fn))
 
-fig = plt.figure(figsize=(50, 14))
-fig.subplots_adjust(right=0.8)
-vmim = corr_mat.max()
-vmax = corr_mat.min()
+# #original
+# fig = plt.figure(figsize=(50, 14))
+# fig.subplots_adjust(right=0.8)
+# vmim = corr_mat.max()
+# vmax = corr_mat.min()
+# for i in range(n_components):
+#     ax = fig.add_subplot(2, n_components, i + 1)
+#     brain = ax.matshow(corr_mat[..., i], vmin=-1, vmax=1,
+#                cmap=plt.cm.RdBu_r)
+#     ax.set_xticks(np.arange(n_areas))
+#     ax.set_xticklabels(region_labels, rotation=90)
+#     ax.set_yticks(np.arange(n_areas))
+#     ax.set_yticklabels(region_labels)
+#     cb_brain = fig.colorbar(brain)
+
+#     behav_ax = fig.add_subplot(2, n_components, i + n_components + 1)
+#     behav_arr = np.zeros((1, len(keys)))
+#     behav_arr.flat[:y_loadings.shape[0]] = y_loadings[:, i]
+#     # behav = behav_ax.matshow(behav_arr, vmin=y_loadings[:, i].min(), vmax=y_loadings[:, i].max(),
+#     #                  cmap=plt.cm.RdBu_r)
+#     behav = behav_ax.matshow(behav_arr, vmin=-0.7, vmax=0.7,
+#                      cmap=plt.cm.RdBu_r)
+#     behav_ax.set_xticks(np.arange(len(keys)))
+#     behav_ax.set_xticklabels(keys, rotation=90)
+#     cb_behave = fig.colorbar(behav, orientation='horizontal')
+
+# plt.savefig(result_corr_fn)
+# plt.close(fig)
+result_corr_fn='tests3.pdf'
+#test
+fig = plt.figure(figsize=(20, 40))
+fig.subplots_adjust(left=0.3, right=0.8, hspace = 0.4)
 for i in range(n_components):
-    ax = fig.add_subplot(2, n_components, i + 1)
+    ax = fig.add_subplot(n_components, 2, i*2 + 1)
     brain = ax.matshow(corr_mat[..., i], vmin=-1, vmax=1,
                cmap=plt.cm.RdBu_r)
     ax.set_xticks(np.arange(n_areas))
     ax.set_xticklabels(region_labels, rotation=90)
     ax.set_yticks(np.arange(n_areas))
     ax.set_yticklabels(region_labels)
-    cb_brain = fig.colorbar(brain)
+    # cb_brain = fig.colorbar(brain)
 
-    behav_ax = fig.add_subplot(2, n_components, i + n_components + 1)
-    behav_arr = np.zeros((1, len(keys)))
+    behav_ax = fig.add_subplot(n_components, 2, (i + 1)*2)
+    behav_arr = np.zeros((len(keys),1))
     behav_arr.flat[:y_loadings.shape[0]] = y_loadings[:, i]
     # behav = behav_ax.matshow(behav_arr, vmin=y_loadings[:, i].min(), vmax=y_loadings[:, i].max(),
     #                  cmap=plt.cm.RdBu_r)
-    behav = behav_ax.matshow(behav_arr, vmin=-0.7, vmax=0.7,
-                     cmap=plt.cm.Blues_r)
-    behav_ax.set_xticks(np.arange(len(keys)))
-    behav_ax.set_xticklabels(keys, rotation=90)
-    cb_behave = fig.colorbar(behav, orientation='horizontal')
+    behav = behav_ax.matshow(behav_arr, vmin=-1, vmax=1,
+                     cmap=plt.cm.RdBu_r)
+    behav_ax.set_yticks(np.arange(len(keys)))
+    behav_ax.set_yticklabels(keys)
+    cb_behave = fig.colorbar(behav)
 
 plt.savefig(result_corr_fn)
 plt.close(fig)
+
 
 
 
