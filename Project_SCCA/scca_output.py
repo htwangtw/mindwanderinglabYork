@@ -8,6 +8,8 @@ the included behavioural data should include only the variables/tasks/participan
 you are looking at in this analysis.
 The first column of your behavioural data must be participant number.
 
+behavior participant number should be smaller than or equal to rs participant number.
+ie. we have the RS data up to P145, the last participant you include should be P145 as well.
 '''
 beh_keysfn = 'select_keys_MWQ.npy'
 behavefn = 'select_data_MWQ_sessionMean.npy' 
