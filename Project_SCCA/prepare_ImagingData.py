@@ -9,6 +9,8 @@ Last updated on Wed 20th of Apr 2016
 Please ensure the following packages are installed if you are running on your personal machine:
 	numpy, nilearn, nibable
 
+The atlas directory should include the .nii and/or the .nii.gz files of ROIs only.
+
 If you are using the preprocessed data for Sparse-CCA:
 	-The id should match the subject id of the imaging data or the other set of behavioral data.
 	-In other words, the same participant should have the same id across those two set of data.
@@ -18,13 +20,15 @@ If you are using the preprocessed data for Sparse-CCA:
 WD = 'U:\\PhDProjects\\Project_CCA'
 DATA_DIR = 'U:\\PhDProjects\\CS_Analysis\\CS_brain_preprocessed'
 ATLAS_DIR = 'U:\\PhDProjects\\Project_CCA\\Bzdok_DMN\\*.nii'
-roiLabel = 'U:\\PhDProjects\\Project_CCA\\Bzdok_DMN\\Bzdok_DMN14_lables.nii.gz'
+#keep the atlas folder clean is a good idea
+roiLabel = 'U:\\PhDProjects\\Project_CCA\\Bzdok_DMN16_lables.nii.gz'
 #name: [project]_cross_corr_[chosen masks][number of the regions]
-crosscorr = 'cs_cross_corr_Bzdok_DMN14'
+crosscorr = 'cs_cross_corr_Bzdok_DMN16'
 
 #########################################################################################
 import glob
 import os
+import sys
 import numpy as np
 from nilearn.image import resample_img, index_img
 import nibabel as nib
@@ -39,12 +43,12 @@ tmp_nii = nib.load(tmp_nii_path)
 if ATLAS_DIR.split('.')[-1]== 'nii':
     RE_ATLAS_DIR = ATLAS_DIR + '.gz'
     fform = '.nii'
-elif ATLAS_DIR.split('.')[-1]== '.gz':
+elif ATLAS_DIR.split('.')[-1]== 'gz':
     RE_ATLAS_DIR = ATLAS_DIR
     fform = '.nii.gz'
 else:
-    print 'You are not loading NIFTI files'
-    print fform
+	fform = ATLAS_DIR.split('.')[-1]
+	sys.exit('You are not loading NIFTI files, it was .%s' %fform)
 
 # atlas_nii = glob.glob(ATLAS_DIR)
 atlas_nii = sorted(glob.glob(ATLAS_DIR)) #windows
@@ -74,14 +78,17 @@ if ATLAS_DIR.split('.')[-1]== 'nii':
         
         # dump to disk
         re_cur_roi.to_filename(cur_roi + '.gz')
-elif ATLAS_DIR.split('.')[-1]== '.gz':
-    pass
 else:
-    print 'You are not loading NIFTI files'
+    pass
+
 
 #atlas_re_nii = glob.glob(RE_ATLAS_DIR)
 atlas_re_nii = sorted(glob.glob(RE_ATLAS_DIR))  #windows
-
+if len(atlas_re_nii) != len(atlas_nii):
+	sys.exit('''You are not loading the correct .nii.gz files to create masks.
+	Check if atlas_re_nii and atlas_nii matches.''')
+else:
+	print 'ok'
 
 # parse the time series from our atlas
 label_atlas = np.zeros(tmp_nii.shape[:3], dtype=np.int)
@@ -122,8 +129,16 @@ for i_rs_img, rs_img in enumerate(rs_niis):
     # save for later
     corr_mat_vect_list.append(corr_mat_vect)
 corr_mat_vect_array = np.array(corr_mat_vect_list)
-print(corr_mat_vect_array.shape)
-np.save(crosscorr, corr_mat_vect_array)
+
+print(corr_mat_vect_array.shape) 
+
+if len(corr_mat_vect_array) == len(atlas_nii):
+	print corr_mat_vect_array.shape
+	np.save(crosscorr, corr_mat_vect_array)
+else:
+	sys.exit('The shpae should be %i by %i. Check the .nii.gz files in your atlas directory.' 
+		%(len(rs_niis), len(atlas_nii)/2*(len(atlas_nii)-1)))
+
 
 reg_reg_names = [atlas_names[a] + ' vs ' + atlas_names[b] for (a,b) in zip(triu_inds[0], triu_inds[1])]
 np.save(crosscorr+'_keys', reg_reg_names)
