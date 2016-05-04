@@ -71,17 +71,20 @@ np.save(keysfn, prep_keys)
 #get the variable we are including
 cs_include = data_raw[includeKeys].values
 
-#exclde cases with more than 10 nan
 excludeIdx = []
+#exclde cases with more than 10 nan
 for i in range(cs_include.shape[0]):
     n = np.count_nonzero(np.isnan(cs_include)[i])
     if n>10:
         excludeIdx.append(i)
-
 excludeIdx = np.array(excludeIdx)
-
 #exclude the participants
 data = np.delete(cs_include, excludeIdx, 0)
+
+#outliers
+def reject_outliers(data, m=2.5):
+    return data[abs(data - np.mean(data, axis=0)[np.newaxis, :]) < m * np.std(data, axis=0)]
+
 
 if missing:
 	#replace NaNs with means of the variables
@@ -90,6 +93,14 @@ if missing:
 	data_impute = imp.fit_transform(data)
 	data_og = data
 	data = data_impute
+
+
+#demean
+S = data.sum(axis=0) / data.shape[0]
+data -= S[np.newaxis, :]
+var = (data ** 2).sum(axis=0)
+var[var == 0] = 1
+data /= var
 
 np.save(selectdatafn, data)
 
