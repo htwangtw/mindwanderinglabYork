@@ -29,8 +29,8 @@ If you are using the preprocessed data for Sparse-CCA:
 """
 missing = True
 excludeNaN = False
-WD = 'U:\\PhDProjects\\Project_CCA'
-behavData_xlsx = 'mwq.raw_completeP145_corrected_sessionMean.xlsx'
+WD = 'C:\\Users\\hw1012\\Documents\\Project_CCA'
+behavData_xlsx = 'mwq.raw_sessionMean.xlsx'
 
 #Keywords in the selected variable, they have to match the exact name in the file               
 #the first key you select must be the id
@@ -96,26 +96,23 @@ if excludeNaN:
 else:
 	data = cs_include
 
-#outliers
-def reject_outliers(data, m=2.5):
-    return data[abs(data - np.mean(data, axis=0)[np.newaxis, :]) < m * np.std(data, axis=0)]
+IDNO = data[:,0]
 
+#outliers
+def NaN_outliers(data, m=2.5):
+	mean = np.mean(data, axis=0)
+	is_outliers = abs(data - mean) < m * np.sqrt(np.sum((data - mean)**2, axis=0)/data.shape[0])
+	#put'NaN' in
+	data[~is_outliers] = np.nan
+	return data
+data = NaN_outliers(data[:,1:], m=2.5)
 
 if missing:
 	#replace NaNs with means of the variables
 	from sklearn.preprocessing import Imputer
 	imp = Imputer(missing_values='NaN', strategy='mean', axis=0)
 	data_impute = imp.fit_transform(data)
-	data_og = data
 	data = data_impute
-
-
-#demean
-S = data.sum(axis=0) / data.shape[0]
-data -= S[np.newaxis, :]
-var = (data ** 2).sum(axis=0)
-var[var == 0] = 1
-data /= var
+data = np.column_stack((IDNO, data))
 
 np.save(selectdatafn, data)
-
