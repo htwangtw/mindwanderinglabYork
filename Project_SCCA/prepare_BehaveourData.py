@@ -72,7 +72,6 @@ np.save(keysfn, prep_keys)
 #get the variable we are including
 cs_include = data_raw[includeKeys].values
 
-<<<<<<< HEAD
 excludeIdx = []
 #exclde cases with more than 10 nan
 for i in range(cs_include.shape[0]):
@@ -82,7 +81,6 @@ for i in range(cs_include.shape[0]):
 excludeIdx = np.array(excludeIdx)
 #exclude the participants
 data = np.delete(cs_include, excludeIdx, 0)
-=======
 if excludeNaN:
 	#exclde cases with more than 10 nan
 	excludeIdx = []
@@ -97,8 +95,6 @@ if excludeNaN:
 	data = np.delete(cs_include, excludeIdx, 0)
 else:
 	data = cs_include
-
->>>>>>> origin/master
 
 #outliers
 def reject_outliers(data, m=2.5):
