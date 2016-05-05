@@ -2,7 +2,9 @@ import numpy as np
 import warnings
 
 def is_outliers(data, m=2.5):
-
+	'''
+	Just check outliers(boolean)
+	'''
 	with warnings.catch_warnings():
 		warnings.simplefilter("ignore", category=RuntimeWarning)
 		mean = np.nanmean(data, axis=0)
@@ -12,6 +14,9 @@ def is_outliers(data, m=2.5):
 	return is_outliers
 
 def imputedata(data, strategy='mean', missing=False):
+	'''
+	two impute strategys
+	'''
 	with warnings.catch_warnings():
 		warnings.simplefilter("ignore", category=RuntimeWarning)
 		mean = np.nanmean(data, axis=0)
