@@ -17,13 +17,13 @@ If you are using the preprocessed data for Sparse-CCA:
 
 """
 
-WD = 'U:\\PhDProjects\\Project_CCA'
+WD = 'C:\\Users\\hw1012\\Documents\\Project_CCA\\Bzdok_DMN'
 DATA_DIR = 'U:\\PhDProjects\\CS_Analysis\\CS_brain_preprocessed'
-ATLAS_DIR = 'U:\\PhDProjects\\Project_CCA\\Bzdok_DMN\\*.nii'
-#keep the atlas folder clean is a good idea
-roiLabel = 'U:\\PhDProjects\\Project_CCA\\Bzdok_DMN16_lables.nii.gz'
+# ATLAS_DIR = 'U:\\PhDProjects\\Project_CCA\\Bzdok_DMN\\*.nii'
+keep the atlas folder clean is a good idea
+roiLabel = 'C:\\Users\\hw1012\\Documents\\Project_CCA\\Bzdok_DMN14_lables.nii.gz'
 #name: [project]_cross_corr_[chosen masks][number of the regions]
-crosscorr = 'cs_cross_corr_Bzdok_DMN16'
+crosscorr = 'cs_cross_corr_Bzdok_DMN14_P165'
 
 #########################################################################################
 import glob
@@ -108,8 +108,8 @@ label_atlas_nii = nib.Nifti1Image(
 
 #save for future usage
 label_atlas_nii.to_filename(roiLabel)
-# #load saved labels
-# label_atlas_nii= nib.load('DMN_subregions_label.nii.gz')
+#load saved labels
+# label_atlas_nii= nib.load(roiLabel)
 
 masker = NiftiLabelsMasker(labels_img=label_atlas_nii, standardize=True,
                            memory='nilearn_cache', verbose=0)
@@ -132,13 +132,12 @@ corr_mat_vect_array = np.array(corr_mat_vect_list)
 
 print(corr_mat_vect_array.shape) 
 
-if len(corr_mat_vect_array) == len(atlas_nii):
+if len(corr_mat_vect_array) == label_atlas_nii.shpae[0]:
 	print corr_mat_vect_array.shape
 	np.save(crosscorr, corr_mat_vect_array)
 else:
 	sys.exit('The shpae should be %i by %i. Check the .nii.gz files in your atlas directory.' 
-		%(len(rs_niis), len(atlas_nii)/2*(len(atlas_nii)-1)))
-
+		%(len(rs_niis), label_atlas_nii.shpae[0]))
 
 reg_reg_names = [atlas_names[a] + ' vs ' + atlas_names[b] for (a,b) in zip(triu_inds[0], triu_inds[1])]
 np.save(crosscorr+'_keys', reg_reg_names)
