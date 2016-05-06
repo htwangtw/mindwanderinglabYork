@@ -42,3 +42,11 @@ def imputedata(data, strategy='mean', missing=False):
 			else: #missing data will be left as nan
 				data[ind_nan,i] = mean[i] * abs(sign[ind_nan,i])
 	return data
+
+def demean(Y):
+	#it doesn't handle nan
+	S = Y.sum(axis=0) / Y.shape[0]
+	Y -= S[np.newaxis, :]
+	var = (Y ** 2).sum(axis=0)
+	var[var == 0] = 1
+	Y /= var

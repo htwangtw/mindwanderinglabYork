@@ -130,6 +130,9 @@ plt.savefig(result_corr_fn)
 plt.close(fig)
 
 
-# #for future use; weighted timeseries
-# np.save('brain_SCCAloading',x_loadings)
-# np.save('behavior_SCCAloading',y_loadings)
+comp = np.zeros((len(Y), y_loadings.shape[1]*2))
+for i in range(behave_loading.shape[1]): 
+	comp[:, i] = np.sum(X*x_loadings[:,i],1)
+	comp[:, i+6] = np.sum(Y*y_loadings[:,i],1)
+comp = np.column_stack((subject_subset+1, comp))
+np.savetxt('foo.csv', comp, fmt='%10.8f', delimiter=',')
