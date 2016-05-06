@@ -1,8 +1,20 @@
+'''
+impute data
 
+Last updated on Thu 05th of May 2016
+@author: Haoting
+
+
+The data should have labels and the fiest column is participant number.
+If not, modify yourself. The script is very straight forward.
+
+You also need costumed module I make for general analysis. Please put it under your work directory.
+	MWLAb_analysis.py
+
+'''
 WD = '\\change\\to\\your\\workingdirectory'
 behavData_xlsx = 'fuckoff.xlsx'
 imp_s = '2sd' #selections: mean or 2sd
-
 import pandas as pd
 import numpy as np
 import os

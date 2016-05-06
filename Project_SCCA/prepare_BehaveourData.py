@@ -16,11 +16,10 @@ It can
 Please ensure the following packages are installed if you are running on your personal machine:
 	pandas, numpy, joblib, scikitlearn
 
-You also need costumed module I make for general analysis.
-	analysis.py
+You also need costumed module I make for general analysis. Please put it under your work directory.
+	MWLAb_analysis.py
 
-Put the script in the same directory of the raw behavior data
-Please check file 'CS_MergedDataset_12.02.16_N100.xlsx' as an example raw data file
+Put the script in the same directory of the raw behavior data. 
 
 If you are using the preprocessed data for Sparse-CCA:
 	-The id should match the subject id of the imaging data or the other set of behavioral data.
@@ -40,7 +39,7 @@ selectedKeys = ['foo_ID',
 
 #optional: name the selected behavioral data; can leave unchanged; this will save data as .npy files
 keysfn = 'keys_foo'
-selectdatafn = 'data_foo'
+datafn = 'data_foo'
 imp_s = '2sd' # impute strategy
 drop_c = 20  #criteria of dropping participants: number of missing variable 
 impute_miss = False #if you are using this output for SCCA, set as True. It will impute missing values with variable mean
@@ -96,6 +95,6 @@ data_imp = imputedata(data, imp_s, missing=impute_miss) #impute outlier
 #save file
 output = np.column_stack((IDNO, data_imp))
 
-np.save(selectdatafn, output)
+np.save(datafn, output)
 np.save(keysfn, keys)
 np.savetxt('foo.csv', output, fmt='%10.8f', delimiter=',')
