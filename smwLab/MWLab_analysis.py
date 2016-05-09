@@ -21,12 +21,14 @@ def imputedata(data, strategy='mean', missing=False):
 		warnings.simplefilter("ignore", category=RuntimeWarning)
 		mean = np.nanmean(data, axis=0)
 		sd = np.sqrt(np.nanmean((data - mean)**2, axis=0))
+	sign = np.sign(data - mean)
 	is_out = is_outliers(data, m=2.5)
 	data[is_out] = np.nan
-	sign = np.sign(data - mean)
+
 	
 	if strategy == '2sd':
-		#impute as +-2sd m
+		# impute as +-2sd m
+		# reduce the change in distribution. 
 		for i in range(data.shape[1]):
 			if missing:
 				sign[np.isnan(sign)] = 0 #missing data will be imputed as mean
