@@ -2,7 +2,7 @@ n_components = 6
 pen_brain = 0.3
 pen_behave = 0.5
 
-WD = 'U:\\PhDProjects\\Project_CCA'
+WD = 'C:\\Users\\hw1012\\Documents\\Project_CCA'
 '''
 the included behavioural data should include only the variables/tasks/participants
 you are looking at in this analysis.
@@ -11,14 +11,14 @@ The first column of your behavioural data must be participant number.
 behavior participant number should be smaller than or equal to rs participant number.
 ie. we have the RS data up to P145, the last participant you include should be P145 as well.
 '''
-beh_keysfn = 'select_keys_MWQ.npy'
-behavefn = 'select_data_MWQ_sessionMean.npy' 
+beh_keysfn = 'Master_keys_MWQ.npy'
+behavefn = 'data_MWQ_task.npy' 
 
 n_areas = 14
-rscorrfn = 'cs_cross_corr_Bzdok_DMN14.npy'
+rscorrfn = 'cs_cross_corr_Bzdok_DMN14_P165.npy'
 corr_keys_fn = 'cs_cross_corr_Bzdok_DMN14_keys.npy'
 region_labels_fn = 'cs_cross_corr_Bzdok_DMN14_ROIS.npy'
-result_corr_fn = 'BzdokDMN14_MWQ_S1_penBrain%1.1f_penBehav%1.1f_nComponets%1.0f.pdf' %(pen_brain, pen_behave, n_components)
+result_corr_fn = 'BzdokDMN14_MWQ_CRT_penBrain%1.1f_penBehav%1.1f_nComponets%1.0f.pdf' %(pen_brain, pen_behave, n_components)
 
 import pandas.rpy.common as com
 # load the Stanford package for SCCA, it should load dependent packages as well
@@ -55,11 +55,11 @@ all_behavioral_data = np.load(expanduser(behavefn))
 rest_data = np.load(expanduser(rscorrfn))
 
 
-subjet_subset = all_behavioral_data[:138, 0].astype('i4') - 1
+subject_subset = all_behavioral_data[:, 0].astype('i4') - 1
 keys = all_keys[1:]
-behavioral_data = all_behavioral_data[:, 1:]
+behavioral_data = all_behavioral_data[:, 1:14]
 
-X = rest_data[subjet_subset]
+X = rest_data[subject_subset]
 Y = behavioral_data
 #demean
 S = Y.sum(axis=0) / Y.shape[0]
@@ -131,8 +131,8 @@ plt.close(fig)
 
 
 comp = np.zeros((len(Y), y_loadings.shape[1]*2))
-for i in range(behave_loading.shape[1]): 
+for i in range(y_loadings.shape[1]): 
 	comp[:, i] = np.sum(X*x_loadings[:,i],1)
 	comp[:, i+6] = np.sum(Y*y_loadings[:,i],1)
 comp = np.column_stack((subject_subset+1, comp))
-np.savetxt('foo.csv', comp, fmt='%10.8f', delimiter=',')
+np.savetxt('foo4.csv', comp, fmt='%10.8f', delimiter=',')
