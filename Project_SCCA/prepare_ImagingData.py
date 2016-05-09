@@ -26,9 +26,7 @@ roiLabel = 'C:\\Users\\hw1012\\Documents\\Project_CCA\\Bzdok_DMN14_lables.nii.gz
 crosscorr = 'cs_cross_corr_Bzdok_DMN14_P165'
 
 #########################################################################################
-import glob
-import os
-import sys
+import glob, os, sys
 import numpy as np
 from nilearn.image import resample_img, index_img
 import nibabel as nib

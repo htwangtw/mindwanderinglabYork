@@ -24,7 +24,6 @@ def imputedata(data, strategy='mean', missing=False):
 	sign = np.sign(data - mean)
 	is_out = is_outliers(data, m=2.5)
 	data[is_out] = np.nan
-
 	
 	if strategy == '2sd':
 		# impute as +-2sd m
