@@ -13,7 +13,7 @@ rest_loading = np.load(expanduser('RSxMWQ_RS_SCCAloading_mat.npy'))
 rest_comp = np.sum(rest_loading, axis=1)/np.sum(rest_loading!=0, axis=1)
 rest_comp[np.isnan(rest_comp)] = 0
 #load ROI masks
-ATLAS_DIR = 'C:\\Users\\hw1012\\Documents\\Project_CCA\\Bzdok_DMN\\*.nii.gz'
+ATLAS_DIR = 'C:\\Users\\hw1012\\Documents\\Project_CCA\\Bzdok_smoothed_DMN_subregions\\*.nii.gz'
 atlas_nii = sorted(glob.glob(ATLAS_DIR)) #windows
 sample_nii = nib.load('U:\\PhDProjects\\CS_Analysis\\CS_brain_preprocessed\\001_R4087_MNI152_2mm_prepro_filtered_func_data.nii.gz')
 weight_atlas = np.zeros(sample_nii.shape[:3])
