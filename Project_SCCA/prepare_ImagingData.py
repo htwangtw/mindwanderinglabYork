@@ -26,9 +26,7 @@ roiLabel = 'C:\\Users\\hw1012\\Documents\\Project_CCA\\Bzdok_DMN14_lables.nii.gz
 crosscorr = 'cs_cross_corr_Bzdok_DMN14_P165'
 
 #########################################################################################
-import glob
-import os
-import sys
+import glob, os, sys
 import numpy as np
 from nilearn.image import resample_img, index_img
 import nibabel as nib
@@ -122,7 +120,6 @@ ind_list = []
 for i_rs_img, rs_img in enumerate(rs_niis):
     print('%i/%i: %s' % (i_rs_img + 1, len(rs_niis), rs_img))
     rs_reg_ts = masker.transform(rs_img)
-
     corr_mat = np.corrcoef(rs_reg_ts.T)
     triu_inds = np.triu_indices(corr_mat.shape[0], 1)
     corr_mat_vect = corr_mat[triu_inds]
