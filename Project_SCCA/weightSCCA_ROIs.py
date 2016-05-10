@@ -13,16 +13,18 @@ rest_loading = np.load(expanduser('RSxMWQ_RS_SCCAloading_mat.npy'))
 rest_comp = np.sum(rest_loading, axis=1)/np.sum(rest_loading!=0, axis=1)
 rest_comp [np.isnan(rest_comp)] = 0
 #load ROI masks
-# ATLAS_DIR = 'C:\\Users\\hw1012\\Documents\\Project_CCA\\Bzdok_smoothed_DMN_subregions\\*fwhm8.nii.gz'
-ATLAS_DIR = 'C:\\Users\\hw1012\\Documents\\Project_CCA\\Bzdok_DMN\\*.nii.gz'
+ATLAS_DIR = 'C:\\Users\\hw1012\\Documents\\Project_CCA\\Bzdok_smoothed_DMN_subregions\\*fwhm8.nii.gz'
+# ATLAS_DIR = 'C:\\Users\\hw1012\\Documents\\Project_CCA\\Bzdok_DMN\\*.nii.gz'
 atlas_nii = sorted(glob.glob(ATLAS_DIR)) #windows
-binarize = True
-# atlas_nii_re = []
-# atlas_nii_re.append(atlas_nii[0:2])
-# atlas_nii_re.append(atlas_nii[5:11])
-# atlas_nii_re.append(atlas_nii[2:5])
-# atlas_nii_re.append(atlas_nii[11:])
-# atlas_nii = [item for sublist in atlas_nii_re for item in sublist]
+binarize = False
+
+# matching filenames
+atlas_nii_re = []
+atlas_nii_re.append(atlas_nii[0:2])
+atlas_nii_re.append(atlas_nii[5:11])
+atlas_nii_re.append(atlas_nii[2:5])
+atlas_nii_re.append(atlas_nii[11:])
+atlas_nii = [item for sublist in atlas_nii_re for item in sublist]
 
 
 sample_nii = nib.load('U:\\PhDProjects\\CS_Analysis\\CS_brain_preprocessed\\001_R4087_MNI152_2mm_prepro_filtered_func_data.nii.gz')
@@ -45,6 +47,8 @@ for k in range(rest_comp.shape[1]):
 			cur_data = np.array(cur_data > 0.5, dtype=np.int)
 		if len(cur_data.shape) > 3:
 			cur_data = cur_data[:, :, :, 0]
+		if cur_data.max()>1:
+			cur_data /= cur_data.max()
 		weight_atlas += cur_data * rest_comp[i_roi,k]
 		print np.sum(cur_data * rest_comp[i_roi,k])
 	#create labels
@@ -53,6 +57,6 @@ for k in range(rest_comp.shape[1]):
 	    affine=sample_nii.get_affine(),
 	    header=sample_nii.get_header()
 	)
-	weight_atlas_nii.to_filename('weightedmasks\\notsmoothed_weightedmask_comp%i.nii.gz'%(k+1))
+	weight_atlas_nii.to_filename('weightedmasks\\smoothed_weightedmask_comp%i.nii.gz'%(k+1))
 
 

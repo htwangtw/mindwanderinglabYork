@@ -120,7 +120,6 @@ ind_list = []
 for i_rs_img, rs_img in enumerate(rs_niis):
     print('%i/%i: %s' % (i_rs_img + 1, len(rs_niis), rs_img))
     rs_reg_ts = masker.transform(rs_img)
-
     corr_mat = np.corrcoef(rs_reg_ts.T)
     triu_inds = np.triu_indices(corr_mat.shape[0], 1)
     corr_mat_vect = corr_mat[triu_inds]
