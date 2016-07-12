@@ -27,22 +27,22 @@ If you are using the preprocessed data for Sparse-CCA:
 
 """
 excludeNaN = False
-WD = '\\the\\path'
-behavData_xlsx = 'foo.xlsx'
+WD = 'U:\\Projects\\Project_CCA'
+behavData_xlsx = 'Behavioural\\mwq.raw_sessionMean.xlsx'
 
 # Keywords in the selected variable, they have to match the exact name in the file               
 # the first key you select must be the id
 selectvar = False #if you dont need it, change to false
-selectedKeys = ['foo_ID',
+selectedKeys = ['SCAN_ID',
 				'foo'
 				]#don't touch if false
 
 #optional: name the selected behavioral data; can leave unchanged; this will save data as .npy files
 keysfn = 'keys_foo'
-datafn = 'data_foo'
-imp_s = '2sd' # impute strategy
-drop_c = 20  #criteria of dropping participants: number of missing variable 
-impute_miss = False #if you are using this output for SCCA, set as True. It will impute missing values with variable mean
+datafn = 'data_MWQ_session_preprocessed'
+imp_s = 'mean' # impute strategy
+drop_c = 10  #criteria of dropping participants: number of missing variable 
+impute_miss = True #if you are using this output for SCCA, set as True. It will impute missing values with variable mean
 #Run the script after changing the things above
 ##########################################################################DONT TOUCH##########################################################################
 import pandas as pd
@@ -92,9 +92,17 @@ else:
 
 from MWLab_analysis import *
 data_imp = imputedata(data, imp_s, missing=impute_miss) #impute outlier
+
+#demean
+S = data_imp.sum(axis=0) / data_imp.shape[0]
+data_imp -= S[np.newaxis, :]
+var = (data_imp ** 2).sum(axis=0)
+var[var == 0] = 1
+data_imp /= var
+
 #save file
 output = np.column_stack((IDNO, data_imp))
 
 np.save(datafn, output)
-np.save(keysfn, keys)
-np.savetxt('foo.csv', output, fmt='%10.8f', delimiter=',')
+# np.save(keysfn, keys)
+# np.savetxt('foo.csv', output, fmt='%10.8f', delimiter=',')

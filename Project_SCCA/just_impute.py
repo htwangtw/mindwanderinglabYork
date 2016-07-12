@@ -12,8 +12,8 @@ You also need costumed module I make for general analysis. Please put it under y
 	MWLAb_analysis.py
 
 '''
-WD = '\\change\\to\\your\\workingdirectory'
-behavData_xlsx = 'fuckoff.xlsx'
+WD = 'U:\\PhDProjects\\Project_CCA'
+behavData_xlsx = 'Results\\component_loadings_leaveoneout.xlsx'
 imp_s = '2sd' #selections: mean or 2sd
 import pandas as pd
 import numpy as np
@@ -24,6 +24,6 @@ keys= data_raw.columns
 data = data_raw.values[:,1:]
 IDNO = data_raw.values[:,0]
 from MWLab_analysis import *
-data_imp = imputedata(data, imp_s) 
+data_imp = imputedata(data, imp_s, missing=False) 
 output = np.column_stack((IDNO, data_imp))
-np.savetxt('byeoutliers.csv', output, fmt='%10.8f', delimiter=',')
+np.savetxt('impute_0606.csv', output, fmt='%10.8f', delimiter=',')

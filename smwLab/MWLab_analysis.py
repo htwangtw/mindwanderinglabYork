@@ -51,3 +51,24 @@ def demean(Y):
 	var = (Y ** 2).sum(axis=0)
 	var[var == 0] = 1
 	Y /= var
+
+
+def mean_nonzero(data, a):
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=RuntimeWarning)
+        temp_sum = np.sum(data!=0, axis=a)
+        temp_sum [temp_sum==0] = 1 
+        output = np.sum(data, axis=a)/temp_sum
+    return output
+
+def quadratic1(a,b,c):
+    if b**2-4*a*c < 0:
+        x = np.nan
+        print('No solution') 
+    elif b**2-4*a*c==0: 
+        x = -b/(2*a)
+        print('Solution is',x) 
+    else: 
+        x = np.array(((-b+np.sqrt(b**2-4*a*c))/(2*a), (-b-np.sqrt(b**2-4*a*c))/(2*a)))
+        print('Solutions are', x)
+    return x
