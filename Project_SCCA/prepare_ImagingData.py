@@ -17,13 +17,14 @@ If you are using the preprocessed data for Sparse-CCA:
 
 """
 
-WD = 'C:\\Users\\hw1012\\Documents\\Project_CCA\\Bzdok_DMN'
-DATA_DIR = 'U:\\PhDProjects\\CS_Analysis\\CS_brain_preprocessed'
-# ATLAS_DIR = 'U:\\PhDProjects\\Project_CCA\\Bzdok_DMN\\*.nii'
-keep the atlas folder clean is a good idea
-roiLabel = 'C:\\Users\\hw1012\\Documents\\Project_CCA\\Bzdok_DMN14_lables.nii.gz'
+WD = 'U:\\Projects\\Project_CCA'
+DATA_DIR = 'U:\\Projects\\CS_Analysis\\CS_brain_preprocessed'
+ATLAS_DIR = 'U:\\Projects\\Project_CCA\\Masks\\Bzdok_DMN\\*.nii'
+#keep the atlas folder clean is a good idea
+roiLabel = 'U:\\Projects\\Project_CCA\\Bzdok_DMN14_lables.nii.gz'
 #name: [project]_cross_corr_[chosen masks][number of the regions]
-crosscorr = 'cs_cross_corr_Bzdok_DMN14_P165'
+crosscorr = 'data_cross_corr_Bzdok_DMN14_preprocessed'
+nMasks = 14 #for sanity check
 
 #########################################################################################
 import glob, os, sys
@@ -126,15 +127,17 @@ for i_rs_img, rs_img in enumerate(rs_niis):
     # save for later
     corr_mat_vect_list.append(corr_mat_vect)
 corr_mat_vect_array = np.array(corr_mat_vect_list)
-
 print(corr_mat_vect_array.shape) 
 
-if len(corr_mat_vect_array) == label_atlas_nii.shpae[0]:
+#demean
+corr_mat_vect_array[np.isnan(corr_mat_vect_array)] = 1
+
+if (nMasks**2-nMasks)/2 == corr_mat_vect_array.shape[1]:
 	print corr_mat_vect_array.shape
 	np.save(crosscorr, corr_mat_vect_array)
 else:
 	sys.exit('The shpae should be %i by %i. Check the .nii.gz files in your atlas directory.' 
-		%(len(rs_niis), label_atlas_nii.shpae[0]))
+		%(len(rs_niis), (nMasks**2-nMasks)/2))
 
-reg_reg_names = [atlas_names[a] + ' vs ' + atlas_names[b] for (a,b) in zip(triu_inds[0], triu_inds[1])]
-np.save(crosscorr+'_keys', reg_reg_names)
+# reg_reg_names = [atlas_names[a] + ' vs ' + atlas_names[b] for (a,b) in zip(triu_inds[0], triu_inds[1])]
+# np.save(crosscorr+'_keys', reg_reg_names)
