@@ -85,6 +85,55 @@ def SCCA_Output_Sheet(filename, region_labels_fn, beh_keysfn, subject_subset, X,
         f.write(headers+'\n')
         np.savetxt(f, comp, fmt='%10.8f', delimiter=',')
 
+from sklearn.linear_model import LinearRegression
+
+def expVar(beh_keysfn, X,Y, penalty):
+    keys = np.load(expanduser(beh_keysfn))[1:]
+    limit_exp_var = len(keys) #save for later
+    exp_var_X = []
+    exp_var_Y = []
+    for i in range(1, limit_exp_var+1):
+        n_com = i
+        loadings = SCCA_r(X,Y, n_com, penalty)
+
+        x_loadings = loadings[0]
+        y_loadings = loadings[1]
+        
+        '''
+        calculate the coefficent of determination (R square): the proportion of 
+        the proportion of the variance (fluctuation) of one variable that is predictable 
+        from the other variable. In other words, the ratio of the explained variation to the total
+        variation.
+        '''
+        
+        P = x_loadings
+        lr = LinearRegression(fit_intercept=False)
+        lr.fit(P, X.T)
+        rec_X = lr.coef_.dot(P.T)  #a.dot(b) equals np.dot(a,b)
+        exp_var_X.append(1 - (np.var(X - rec_X) / np.var(X)))
+        Q = y_loadings
+        lr = LinearRegression(fit_intercept=False)
+        lr.fit(Q, Y.T)
+        rec_Y = lr.coef_.dot(Q.T)
+        exp_var_Y.append(1 - np.var(Y - rec_Y) / np.var(Y))
+
+    plt.close('all')
+    plt.figure()
+    plt.plot(np.arange(limit_exp_var) + 1, exp_var_X, label='Brain exp var')
+    plt.plot(np.arange(limit_exp_var) + 1, exp_var_Y, label='Behavioral exp var')
+    plt.ylim(-0.1, 1)
+    plt.xlim(1, limit_exp_var)
+    plt.legend(loc='lower right')
+
+    np.set_printoptions(precision=3,suppress=True,linewidth=1000)
+    x = np.transpose(np.array([range(1, limit_exp_var+1)] +[exp_var_X]+[exp_var_Y]))
+    print ''
+    print 'Explained data proportion'
+    print '    n', '  exp_brain', '  exp_behaviour'
+    print x
+    plt.show()
+
+
 ############################################################################################
 os.chdir(WD)
 
@@ -97,6 +146,8 @@ X = rest_data[subject_subset,:]
 Y = behavioral_data[:,40:]
 
 penalty = (pen_brain,pen_behave)
+######################################################################################
+expVar(beh_keysfn, X,Y, penalty)
 
 loadings = SCCA_r(X, Y, n_components, penalty)
 SCCA_Output_Sheet('Results\\SCCA_all_instances', region_labels_fn, beh_keysfn, subject_subset, X, Y, loadings)
@@ -110,21 +161,29 @@ np.save('Y_SCCAraw',Y)
 Y_LOSO = np.load(expanduser('MWQ_data_trials_LOSO_set2.npy'))[:, 1:]
 subject_subset = np.load(expanduser('MWQ_data_trials_LOSO_set2.npy'))[:, 0].astype('i4') - 1
 X_LOSO = rest_data[subject_subset,:]
+
+expVar(beh_keysfn, X_LOSO, Y_LOSO, penalty)
+
 LOSO_loadings = SCCA_r(X_LOSO, Y_LOSO, n_components, penalty)
 SCCA_Output_Sheet('SCCA_LOSO', region_labels_fn, beh_keysfn, subject_subset, X, Y, LOSO_loadings)
-np.save('SCCAloading_LOSO_long',loadings)
+np.save('SCCAloading_LOSO_long',LOSO_loadings)
 
 #################LOSO COMPLETE#################
-
-def SCCA_boot(X,Y):
-    loadings = SCCA_r(X,Y, 6, (0.3,0.5))
-    np.save('bootstrap_6comp_long.npy', loadings)
-    return True
 import scikits.bootstrap as boot
 data = (X, Y)
+def SCCA_boot(X,Y):
+
+    loadings = SCCA_r(X,Y, 1, (0.3,0.5))
+    np.save('bootstrap_all_comp_long.npy', loadings)
+    return True
 ci_test = boot.ci(data, statfunction=SCCA_boot) 
 
-boot_loadings = np.load(expanduser('bootstrap_6comp_long.npy'))
+boot_loadings = np.load(expanduser('bootstrap_all_comp_long.npy'))
+
+limit_exp_var = 13 #save for later
+exp_var_X = []
+exp_var_Y = []
+
 
 SCCA_Output_Sheet('SCCA_Bootstrap_long', subject_subset, data[0], data[1], boot_loadings)
 
