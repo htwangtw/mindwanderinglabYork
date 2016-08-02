@@ -1,6 +1,8 @@
 #Task folder structure
 All the tasks I built after July, 2016.
+
 ![Screenshot of task folder structure](example.png)
+
 I have develpoed an organisation of task scripts, so we can easily replace/edit instructions without edditing the scripts.
 By dividing different part of experiemnts into modules/functions, it would be easier for debugging.
 You don't always need to run the whole experiment while debugging. Testing single units save you time.
