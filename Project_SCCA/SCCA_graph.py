@@ -67,8 +67,8 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 #     plt.close(fig)
 
 keys = np.load(expanduser('data_raw_keys_MWQ_master.npy'))[1:]
-x_loadings = np.load('SCCA_loadings.npy')[0]
-y_loadings = np.load('SCCA_loadings.npy')[1]
+x_loadings = np.load('SCCAloading_LOSO.npy')[0]
+y_loadings = np.load('SCCAloading_LOSO.npy')[1]
 n_components = x_loadings.shape[1]
 def RS_plot(mat, ax):
     im = ax.matshow(corr_mat[..., i], vmin=-0.9, vmax=0.9, cmap=plt.cm.RdBu_r)
@@ -83,6 +83,7 @@ def MWQ_plot(mat, ax):
     im = ax.matshow(mat, vmin=-0.9, vmax=0.9, cmap=plt.cm.RdBu_r)
     ax.locator_params(nbins=3)
     ax.set_yticks(np.arange(len(keys)))
+    ax.set_xticklabels(' ')
     ax.set_yticklabels(keys, fontsize='large')
     divider = make_axes_locatable(plt.gca())
     cax = divider.append_axes("right", "50%", pad="30%")

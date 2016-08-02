@@ -24,19 +24,19 @@ df_rowclust = df.ix[row_dendr['leaves']]
 
 # plot
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-
-fig = plt.figure(figsize=(df_rowclust.shape[0]*1.5,df_rowclust.shape[1]*5))
+fig = plt.figure(figsize=(df_rowclust.shape[0]*2,df_rowclust.shape[1]*5))
+# fig = plt.figure()
 ax = fig.add_subplot(111)
-im = ax.matshow(df_rowclust, vmin=-0.9, vmax=0.9, interpolation='nearest', cmap=plt.cm.RdBu_r)
+im = ax.matshow(df_rowclust, vmin=-0.9, vmax=0.9, interpolation='nearest', cmap=plt.cm.RdBu_r, aspect='equal')
 divider = make_axes_locatable(plt.gca())
 cax = divider.append_axes("right", "15%", pad="20%")
 plt.colorbar(im, cax=cax)
 ax.set_yticks(range(df_rowclust.shape[0]))
 ax.set_xticks(range(df_rowclust.shape[1]))
 ax.xaxis.set_ticks_position('top')
-ax.set_xticklabels(list(df_rowclust.columns), fontsize='x-large', rotation=90)
+ax.set_xticklabels(list(df_rowclust.columns), fontsize='x-large')
 ax.set_yticklabels(list(df_rowclust.index), fontsize='x-large')
-plt.savefig('TaskScores_clustered.png')
+plt.savefig('TaskScores_clustered_new.png')
 
 # fig = plt.figure(figsize=(df.shape[0]*1.5,df.shape[1]*3))
 # ax = fig.add_subplot(111)
