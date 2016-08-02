@@ -1,7 +1,7 @@
 #Task folder structure
-All the tasks I built after May, 2016?
-
 ![Screenshot of task folder structure](example.png)
+
+Applied to all the tasks I built after May, 2016?
 
 I have develpoed an organisation of task scripts, so we can easily replace/edit instructions without edditing the scripts.
 By dividing different part of experiemnts into modules/functions, it would be easier for debugging.
