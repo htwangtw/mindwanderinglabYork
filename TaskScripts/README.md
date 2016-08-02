@@ -1,5 +1,5 @@
 #Task folder structure
-All the tasks I built after July, 2016.
+All the tasks I built after May, 2016?
 
 ![Screenshot of task folder structure](example.png)
 
