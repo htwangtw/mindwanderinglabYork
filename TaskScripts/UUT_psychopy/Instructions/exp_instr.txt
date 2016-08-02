@@ -1,0 +1,12 @@
+Advance to instructions...
+#
+Welcome to the Unusual Uses Task.
+
+In this task you will be presented with the name of an object for 10 seconds.
+
+You will then be taken to a blank screen where you are required to list as many uses for that object as you can think of in 2 minutes.
+
+This will be repeated for 3 different objects.
+
+Press RETURN to start the task.
+

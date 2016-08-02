@@ -1,0 +1,6 @@
+24062061	shorten the practice by cutting the number of questions at the end. 
+		The practice is a fixed set of trials.
+
+23062016	Transparent fixation cross background color
+
+16062016	v2.0 handle more then one switch

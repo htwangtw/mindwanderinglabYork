@@ -1,0 +1,17 @@
+item,trial,correctAns,digit_1,digit_2,digit_3,digit_4,digit_5,digit_6,digit_7,digit_8,digit_9
+1,1,17,one.wav,seven.wav,,,,,,,
+1,2,63,six.wav,three.wav,,,,,,,
+2,1,582,five.wav,eight.wav,two.wav,,,,,,
+2,2,694,six.wav,nine.wav,four.wav,,,,,,
+3,1,6439,six.wav,four.wav,three.wav,nine.wav,,,,,
+3,2,7286,seven.wav,two.wav,eight.wav,six.wav,,,,,
+4,1,42731,four.wav,two.wav,seven.wav,three.wav,one.wav,,,,
+4,2,75836,seven.wav,five.wav,eight.wav,three.wav,six.wav,,,,
+5,1,619473,six.wav,one.wav,nine.wav,four.wav,seven.wav,three.wav,,,
+5,2,392487,three.wav,nine.wav,two.wav,four.wav,eight.wav,seven.wav,,,
+6,1,5917428,five.wav,nine.wav,one.wav,seven.wav,four.wav,two.wav,eight.wav,,
+6,2,4179386,four.wav,one.wav,seven.wav,nine.wav,three.wav,eight.wav,six.wav,,
+7,1,58192647,five.wav,eight.wav,one.wav,nine.wav,two.wav,six.wav,four.wav,seven.wav,
+7,2,38295174,three.wav,eight.wav,two.wav,nine.wav,five.wav,one.wav,seven.wav,four.wav,
+8,1,275862584,two.wav,seven.wav,five.wav,eight.wav,six.wav,two.wav,five.wav,eight.wav,four.wav
+8,2,713942568,seven.wav,one.wav,three.wav,nine.wav,four.wav,two.wav,five.wav,six.wav,eight.wav

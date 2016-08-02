@@ -1,0 +1,15 @@
+Advance to instructions...
+#
+Welcome to our experiment.
+
+This is the digit span test. 
+The test is consist of two parts.
+the first one is the forward digit span test. The other one is the backward digit span test.
+
+In the forward digit span test, you will listen to a sequence of numbers and have to type them in the exact order you heard the numbers. 
+In the backward version you have to type the sequence in a reversed order. 
+
+Please put on the head phones for this test.
+
+
+Press SPACE to start.

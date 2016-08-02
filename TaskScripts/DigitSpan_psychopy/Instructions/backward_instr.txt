@@ -1,0 +1,13 @@
+This is the end of the Forward Digit Span Block.
+
+
+
+Press SPACE to continue.
+#
+Backward Digit Span
+
+Please type in the numbers in the reversed order in which they were read out.
+
+
+
+Press SPACE to start.

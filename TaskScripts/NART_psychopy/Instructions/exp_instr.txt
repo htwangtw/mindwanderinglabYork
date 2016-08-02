@@ -1,0 +1,9 @@
+Advance to instructions...
+#
+Welcome to this experiment!
+
+I want you to read the word presented on the screen and press space to move on to the next. 
+I must warn you that there are many words that you probably won't recognize, in fact most people don't know them, so just guess at these.
+
+Press SPACE to start the task.
+
