@@ -1,8 +1,10 @@
-# mindwanderinglabYork
-Scripts for analysis, experiment etc. in the lab. 
+# Mind Wandering Lab @ University of York
 Maintaied by Haoting Wang
+Last update: 02.08.2016
 
-Currently there are three folders:
+Scripts for analysis, experiment, visualisation I used for lab related works and my PhD. 
+
+Currently, there are three folders:
 
  - Project_SCCA: 
     Analysis and visualisation scripts of the sparse cannonical correlation analysis project.
