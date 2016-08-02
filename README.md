@@ -1,4 +1,4 @@
-# Mind Wandering Lab @ University of York
+# Mind-wandering Lab @ University of York
 Maintaied by Haoting Wang
 Last update: 02.08.2016
 
