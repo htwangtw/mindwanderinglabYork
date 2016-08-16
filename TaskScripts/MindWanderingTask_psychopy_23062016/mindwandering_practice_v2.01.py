@@ -1,7 +1,7 @@
-expName = 'mindwandering_ageing_practice' 
+expName = 'mindwandering_practice' 
 #collect participant info, create logfile
 pptInfo = {
-    'subject': 'R0001_001', 
+    'subject': '001', 
     'session': '999', 
     } #a pop up window will show up to collect these information
 
