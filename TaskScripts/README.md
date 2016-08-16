@@ -24,11 +24,12 @@ This file inclused the actual functions that shows the trials.
 I create fuctions for different screens/ different type of trials.
 ####[task name]\_[version].py
 This is just the frame of the experiment. You assemble the functions built in [task name]\_TrialDisplay.py here.
-This is also the file you run for the experiment. In otherwords, this is where the action happens.
+**Run this file when you run the experiment task.**
+In otherwords, this is where the action happens.
 ####[task name]\_StimList.py (Optional)
 For tasks with complicated condition order, I create a separate file to generate it, as it is easier to debug as a single moulude.
 ####[task name]\_practice\_[version].py (Optional)
 This is just the frame of the practice. You assemble the functions built in [task name]\_TrialDisplay.py here.
-
+**Run this file when you run the practice task.**
 ####updatelog.txt (Optional)
 Just an update log.
