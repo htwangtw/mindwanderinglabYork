@@ -175,7 +175,9 @@ def setStim (STIMS_DIR, keys, times, selection):
 	shuffle(END_ind)
 
 	MWQ_DIR = STIMS_DIR + 'probe_loop.csv'
-	MWQlst =  pd.read_csv(MWQ_DIR).values
+	Focus =   pd.read_csv(MWQ_DIR).values[0]
+	MWQlst =  pd.read_csv(MWQ_DIR).values[1:]
+	# MWQlst =  pd.read_csv(MWQ_DIR).values
 	END_DIR = STIMS_DIR + 'end_loop.csv'
 	ENDlst =  pd.read_csv(END_DIR).values
 
@@ -248,9 +250,12 @@ def setStim (STIMS_DIR, keys, times, selection):
 			
 			if times[i,0] != 0.5:
 				MWQ_start = i+1
-				pic.append('My thoughts were focused on the task I was performing')
-				mwType.append('Focus')
-				ans.append('Not at all                            Completely')
+				pic.append(str(Focus[0]))
+				mwType.append(str(Focus[1]))
+				ans.append(str(Focus[2]))
+				# pic.append('My thoughts were focused on the task I was performing')
+				# mwType.append('Focus')
+				# ans.append('Not at all                            Completely')
 				MWQ_ind = np.arange(0,12)
 				shuffle(MWQ_ind)
 			else:
