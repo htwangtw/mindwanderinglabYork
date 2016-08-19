@@ -1,7 +1,7 @@
 n_components = 6
 pen_brain = 0.3
 pen_behave = 0.5
-region_labels_fn = 'data_cross_corr_Bzdok_DMN14_ROIS.npy'
+region_labels_fn = 'data_cross_corr_Bzdok_DMN14_preprocessed_ROIS.npy'
 beh_keysfn = 'data_raw_keys_MWQ_master.npy'
 
 WD = 'U:\\Projects\\Project_CCA'
@@ -150,11 +150,11 @@ penalty = (pen_brain,pen_behave)
 expVar(beh_keysfn, X,Y, penalty)
 
 loadings = SCCA_r(X, Y, n_components, penalty)
-SCCA_Output_Sheet('Results\\SCCA_all_instances', region_labels_fn, beh_keysfn, subject_subset, X, Y, loadings)
+SCCA_Output_Sheet('Results\\SCCA_all_instances_new', region_labels_fn, beh_keysfn, subject_subset, X, Y, loadings)
 
 np.save('SCCAloading_all_long',loadings)
 np.save('X_SCCAraw',X)
-np.save('Y_SCCAraw',Y)
+# np.save('Y_SCCAraw',Y)
 
 #################SCCA COMPLETE#################
 
@@ -173,19 +173,19 @@ import scikits.bootstrap as boot
 data = (X, Y)
 def SCCA_boot(X,Y):
 
-    loadings = SCCA_r(X,Y, 1, (0.3,0.5))
+    loadings = SCCA_r(X,Y, 6, (0.3,0.5))
     np.save('bootstrap_all_comp_long.npy', loadings)
     return True
 ci_test = boot.ci(data, statfunction=SCCA_boot) 
 
 boot_loadings = np.load(expanduser('bootstrap_all_comp_long.npy'))
 
-limit_exp_var = 13 #save for later
-exp_var_X = []
-exp_var_Y = []
+# limit_exp_var = 13 #save for later
+# exp_var_X = []
+# exp_var_Y = []
 
 
-SCCA_Output_Sheet('SCCA_Bootstrap_long', subject_subset, data[0], data[1], boot_loadings)
+SCCA_Output_Sheet('SCCA_Bootstrap_long', region_labels_fn, beh_keysfn, subject_subset, X, Y, boot_loadings)
 
 
 from numpy import genfromtxt
