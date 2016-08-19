@@ -15,6 +15,7 @@ Currently, there are three folders:
 
 	All the tasks I have built since 2015. For those built after 2016, there is a very simple structure you can follow and modify.
 	THEY ARE NOT MY ORIGINAL WORK. 
+	*For the mind-wandering task, please check the other respository. 
 	I will add credits and refernce to each of them soon.
 
  - custom_modules: 
