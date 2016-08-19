@@ -70,6 +70,7 @@ def get_keyboard(myClock,win, respkeylist):
             thisRT = RT
     return keyResp, thisRT
 
+
 #######################################################################################################################    
 #fMRI related modules
 def setup_input(input_method):

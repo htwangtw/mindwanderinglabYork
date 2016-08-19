@@ -2,9 +2,8 @@ from psychopy import visual, core, event
 from numpy.random import randint, shuffle
 import numpy as np
 from baseDef import*
-
-sans = ['Arial','Gill Sans MT', 'Helvetica','Verdana'] #use the first font found on this list
 win = set_window(fullscr=True, gui=False, color=0)
+sans = ['Arial','Gill Sans MT', 'Helvetica','Verdana'] #use the first font found on this list
 fixation = visual.ImageStim(win, name='fixation', image = None, size = (800, 600))#set pix pos
 postResp = visual.Circle(win, name='postRespT', lineColor='black', fillColor='black', radius=2, edges=32, )
 im = visual.ImageStim(win, name='stimPic', image = None, size = (800, 600), )
@@ -29,7 +28,24 @@ instrTxt = visual.TextStim(win,text='default text', font= sans, name='instructio
     pos=[-50,0], height=30, wrapWidth=1100,
     color='black',
     ) #object to display instructions
+fb = visual.TextStim(win,text='Missed', font= sans, name='feedback',
+    height=50, wrapWidth=1100,
+    color='black', 
+    )
 
+def feedback_screen(keyResp, CORR):
+    if keyResp:
+        if CORR == 0:
+            fb_txt = 'Wrong'
+        else:
+            fb_txt = 'Correct'
+    else:
+        fb_txt = 'Missed'
+    fb.setText(fb_txt)
+    fb.draw()
+    win.flip()
+    core.wait(1)
+    
 def show_questions():
     question.draw()
     descr.draw()
@@ -147,9 +163,9 @@ def MWQ_screen(myClock, i, thisTrial, expInfo, f):
     if event.getKeys(keyList = ['escape']):
         quitEXP(True)
     saveResp(f, i, thisTrial, expInfo, keyResp, respRT, CORR, startT, fixStart)
-    
 
-def NoGo_screen(myClock, i, thisTrial, expInfo, f):
+
+def NoGo_screen(myClock, i, thisTrial, expInfo, f, feedback=True):
     fixStart = fixation_screen(myClock, thisTrial)
     im.setImage(thisTrial['stimPic'])
     show_stim()
@@ -160,7 +176,10 @@ def NoGo_screen(myClock, i, thisTrial, expInfo, f):
         quitEXP(True)
     core.wait(thisTrial['stimT'])
     saveResp(f, i, thisTrial, expInfo, keyResp, respRT, CORR, startT, fixStart)
-    
+    if feedback==True and thisTrial['stimType'] == 'TT':
+        feedback_screen(keyResp, CORR)
+
+
 
 def switch_screen(myClock, i, thisTrial, expInfo, f):
     fixStart = fixation_screen(myClock, thisTrial)
@@ -188,10 +207,10 @@ def endExp(f):
     core.quit()
 
 
-def expTrial(myClock, trials, datafn, expInfo): 
+def expTrial(myClock, trials, datafn, expInfo, feedback=True): 
     keyResp, thisRT, respRT, CORR = reset_output()
     if expInfo['expName'] == 'mindwandering_aging_practice':
-        nEndStart = trials.shape[0] - 13
+        nEndStart = 120
     else:
         nEndStart = trials.shape[0] - 22
     for i, thisTrial in enumerate(trials):
@@ -216,7 +235,8 @@ def expTrial(myClock, trials, datafn, expInfo):
         	else:
         		MWQ_screen(myClock, i, thisTrial, expInfo, f)
         else:
-            NoGo_screen(myClock, i, thisTrial, expInfo, f)
+            NoGo_screen(myClock, i, thisTrial, expInfo, f, feedback)
+
     endExp(f)
 
 

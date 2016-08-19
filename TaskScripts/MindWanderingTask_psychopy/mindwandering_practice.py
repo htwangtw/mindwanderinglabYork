@@ -1,3 +1,7 @@
+'''
+v 2.02
+'''
+
 expName = 'mindwandering_practice' 
 #collect participant info, create logfile
 pptInfo = {
@@ -18,5 +22,5 @@ from MindWandering_StimList import*
 trials = np.load('Stimuli\\practice_trials.npy')
 instruction()
 myClock = core.Clock()
-expTrial(myClock, trials, datafn, expInfo)
+expTrial(myClock, trials, datafn, expInfo, feedback=True)
 

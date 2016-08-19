@@ -1,3 +1,7 @@
+'''
+v 2.02
+'''
+
 expName = 'mindwandering_MDES' 
 #collect participant info, create logfile
 pptInfo = {
@@ -24,4 +28,4 @@ from MindWandering_StimList import*
 trials = getTrials(expInfo, datafn, switch=3) #3 switiches = four blocks = around 20 minutes 
 instruction()
 myClock = core.Clock()
-expTrial(myClock, trials, datafn, expInfo)
+expTrial(myClock, trials, datafn, expInfo, feedback=False)

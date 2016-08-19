@@ -73,7 +73,7 @@ def BlockList (nSwitch, nTT, nProbe, nMWQ, time):
 		if x != ntrials:
 			tempN_NT = nNT - Nend
 			trials = []
-			# print 'abandon this list as it doesnt meet the criteria %i'%(ntrials), x
+			print 'abandon this list as it doesnt meet the criteria %i'%(ntrials), x
 		else: 
 			print 'save this list', x
 			trials +=End
@@ -311,7 +311,12 @@ def getTrials(expInfo, datafn, switch=3):
 
 def getPractice(expInfo, datafn, switch=1):
     trials = getStim(STIMS_DIR='Stimuli' + os.sep, selection=expInfo['conditions'], 
-        nSwitch=switch, nTT=4*(switch+1)/2,nProbe=1*(switch+1)/2, nMWQ=13, time=2*(switch+1)/2, 
+        nSwitch=switch, nTT=10*(switch+1)/2, nProbe=1 , nMWQ=13, time=3*(switch+1)/2, 
         filename=datafn +'_practice.csv')
-    np.save('practice_trials',trials[:45,])
+    np.save('practice_trials',trials[:-14,])
     return trials
+#x = getPractice(expInfo, datafn, switch=3)
+#expInfo = {
+#    'subject': '001', 
+#    'session': '001', 
+#    'conditions' : '0-back',
