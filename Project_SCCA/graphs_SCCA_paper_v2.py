@@ -1,0 +1,92 @@
+from os.path import expanduser
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+#reformat the loadings into the suitable format for the heat maps
+keys = np.load(expanduser('sourcedata\\data_raw_keys_MWQ_master.npy'))[1:]
+MWQ_keys = np.append(keys, keys)
+MWQ_keys = np.append(MWQ_keys, keys)
+loadings_lb = ['sourcedata\\SCCA_all_long.npy', 
+	'sourcedata\\SCCA_LOSO_long.npy', 
+	'sourcedata\\SCCA_bootstrap_long.npy']
+
+y_loadings_1 = np.stack((-np.load(loadings_lb[0])[1][:,0], -np.load(loadings_lb[1])[1][:,0], -np.load(loadings_lb[2])[1][:,0]),axis=1)
+y_loadings_2 = np.stack((np.load(loadings_lb[0])[1][:,1], -np.load(loadings_lb[1])[1][:,1], np.load(loadings_lb[2])[1][:,1]),axis=1)
+y_loadings_3 = np.stack((np.load(loadings_lb[0])[1][:,3], np.load(loadings_lb[1])[1][:,2], -np.load(loadings_lb[2])[1][:,5]),axis=1)
+
+y_loadings = np.vstack((y_loadings_1, y_loadings_2, y_loadings_3))
+
+
+loadings_lb = ['sourcedata\\SCCA_all_brain_loading_mat.npy', 
+	'sourcedata\\SCCA_LOSO_brain_loading_mat.npy', 
+	'sourcedata\\SCCA_bootstrap_brain_loading_mat.npy']
+
+x_loadings_1 = np.hstack((-np.load(loadings_lb[0])[...,0], -np.load(loadings_lb[1])[...,0], -np.load(loadings_lb[2])[...,0]))
+x_loadings_2 = np.hstack((np.load(loadings_lb[0])[...,1], -np.load(loadings_lb[1])[...,1], np.load(loadings_lb[2])[...,1]))
+x_loadings_3 = np.hstack((np.load(loadings_lb[0])[...,3], np.load(loadings_lb[1])[...,2], -np.load(loadings_lb[2])[...,5]))
+
+x_loadings = np.vstack((x_loadings_1, x_loadings_2, x_loadings_3))
+
+n_components = 3
+n_connects = 91
+n_areas = 14
+
+
+def RS_plot(mat, ax):
+    im = ax.matshow(mat, vmin=-0.9, vmax=0.9, cmap=plt.cm.RdBu_r)
+    ax.locator_params(nbins=3)
+    ax.set_xticks(np.arange(n_areas*3))
+    ax.set_xticklabels('', fontsize='large')
+    ax.set_yticks(np.arange(n_areas*3))
+    ax.set_yticklabels('', fontsize='large')
+
+    ax.plot([-0.5, 41.5], [-0.5, 41.5], ls='--', c='.3') 
+
+    ax.plot([-0.5,27.5], [13.5,41.5], ls='--', c='.3')
+    ax.plot([-0.5,13.5], [27.5,41.5], ls='--', c='.3')  
+    ax.plot([13.5,41.5], [-0.5,27.5], ls='--', c='.3')
+    ax.plot([27.5,41.5], [-0.5,13.5], ls='--', c='.3')
+
+
+    ax.vlines(13.5, -0.5, 41.5) 
+    ax.vlines(27.5, -0.5, 41.5) 
+
+    ax.hlines(13.5, -0.5, 41.5) 
+    ax.hlines(27.5, -0.5, 41.5) 
+
+def MWQ_plot(mat, ax):
+    im = ax.matshow(mat, vmin=-0.9, vmax=0.9, cmap=plt.cm.RdBu_r)
+    ax.locator_params(nbins=3)
+    ax.set_yticks(np.arange(len(MWQ_keys)))
+    ax.set_yticklabels(MWQ_keys, fontsize='x-large')
+    ax.set_xticks(np.arange(3))
+    ax.set_xticklabels(['All', 'LOSO', 'BOOTS'], rotation=90)
+    ax.vlines(1.5, -0.5, 38.5) 
+    ax.vlines(0.5, -0.5, 38.5) 
+
+    ax.hlines(12.5, -0.5, 2.5) 
+    ax.hlines(25.5, -0.5, 2.5) 
+
+    divider = make_axes_locatable(plt.gca())
+    cax = divider.append_axes("right", "50%", pad="30%")
+    plt.colorbar(im, cax=cax)
+    plt.tight_layout()
+
+# slide 2 SCCA heat maps
+region_labels = np.load(expanduser('sourcedata\\data_cross_corr_Bzdok_DMN14_ROIS.npy'))
+brain_mat = x_loadings
+behav_arr = y_loadings
+fig = plt.figure(figsize=(16,16))
+fig.subplots_adjust(wspace = 0.5)
+ax1 = plt.subplot2grid((4,4), (0, 0), colspan=3, rowspan=3)
+ax2 = plt.subplot2grid((4,4), (0, 3), colspan=1, rowspan=3)
+RS_plot(brain_mat, ax1)
+MWQ_plot(behav_arr, ax2)
+plt.tight_layout()
+plt.show()
+# plt.savefig('SCCA_component.png')
+# plt.close(fig)
+
+#slide three mind wandering component loading maps (bootstrapping results)
