@@ -29,18 +29,23 @@ x_loadings_3 = np.hstack((np.load(loadings_lb[0])[...,3], np.load(loadings_lb[1]
 
 x_loadings = np.vstack((x_loadings_1, x_loadings_2, x_loadings_3))
 
+# basic info
 n_components = 3
 n_connects = 91
 n_areas = 14
 
-
+# making plots
+RS_keys = ['1', '2', '3', '4', '1', '2', '3', '4', '1', '2', '3', '4', '5', '6',
+			'1', '2', '3', '4', '1', '2', '3', '4', '1', '2', '3', '4', '5', '6',
+			'1', '2', '3', '4', '1', '2', '3', '4', '1', '2', '3', '4', '5', '6',
+			]
 def RS_plot(mat, ax):
     im = ax.matshow(mat, vmin=-0.9, vmax=0.9, cmap=plt.cm.RdBu_r)
     ax.locator_params(nbins=3)
     ax.set_xticks(np.arange(n_areas*3))
-    ax.set_xticklabels('', fontsize='large')
+    ax.set_xticklabels(RS_keys, fontsize='large')
     ax.set_yticks(np.arange(n_areas*3))
-    ax.set_yticklabels('', fontsize='large')
+    ax.set_yticklabels(RS_keys, fontsize='large')
 
     ax.plot([-0.5, 41.5], [-0.5, 41.5], ls='--', c='.3') 
 
@@ -85,8 +90,22 @@ ax2 = plt.subplot2grid((4,4), (0, 3), colspan=1, rowspan=3)
 RS_plot(brain_mat, ax1)
 MWQ_plot(behav_arr, ax2)
 plt.tight_layout()
-plt.show()
-# plt.savefig('SCCA_component.png')
-# plt.close(fig)
+plt.savefig('SCCA_component.png')
+plt.close(fig)
 
-#slide three mind wandering component loading maps (bootstrapping results)
+# #slide three mind wandering component loading maps (bootstrapping results)
+# def MWQ_plot(mat, ax):
+#     im = ax.matshow(mat, vmin=-0.9, vmax=0.9, cmap=plt.cm.RdBu_r)
+#     ax.locator_params(nbins=3)
+#     ax.set_yticks(np.arange(len(keys)))
+#     ax.set_yticklabels(keys, fontsize='x-large')
+#     ax.set_xticks(np.arange(1))
+#     ax.set_xticklabels('', rotation=90)
+
+#     divider = make_axes_locatable(plt.gca())
+#     cax = divider.append_axes("right", "50%", pad="30%")
+#     plt.colorbar(im, cax=cax)
+#     plt.tight_layout()
+
+
+# behav_arr = y_loadings[0:13,2]
