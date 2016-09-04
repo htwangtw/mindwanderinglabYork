@@ -34,7 +34,7 @@ n_components = 3
 n_connects = 91
 n_areas = 14
 
-# making plots
+# slide 2: SCCA summary plots
 RS_keys = ['1', '2', '3', '4', '1', '2', '3', '4', '1', '2', '3', '4', '5', '6',
 			'1', '2', '3', '4', '1', '2', '3', '4', '1', '2', '3', '4', '5', '6',
 			'1', '2', '3', '4', '1', '2', '3', '4', '1', '2', '3', '4', '5', '6',
@@ -79,7 +79,6 @@ def MWQ_plot(mat, ax):
     plt.colorbar(im, cax=cax)
     plt.tight_layout()
 
-# slide 2 SCCA heat maps
 region_labels = np.load(expanduser('sourcedata\\data_cross_corr_Bzdok_DMN14_ROIS.npy'))
 brain_mat = x_loadings
 behav_arr = y_loadings
@@ -93,19 +92,56 @@ plt.tight_layout()
 plt.savefig('SCCA_component.png')
 plt.close(fig)
 
-# #slide three mind wandering component loading maps (bootstrapping results)
-# def MWQ_plot(mat, ax):
-#     im = ax.matshow(mat, vmin=-0.9, vmax=0.9, cmap=plt.cm.RdBu_r)
-#     ax.locator_params(nbins=3)
-#     ax.set_yticks(np.arange(len(keys)))
-#     ax.set_yticklabels(keys, fontsize='x-large')
-#     ax.set_xticks(np.arange(1))
-#     ax.set_xticklabels('', rotation=90)
+#slide 3: mind wandering component loading maps (bootstrapping results)
+def heatmap(size, mat, x_keys, y_keys, filename): 
+    fig,ax=plt.subplots(figsize=size) #set plot size
+    im = ax.matshow(mat, vmin=-0.9, vmax=0.9, cmap=plt.cm.RdBu_r)
 
-#     divider = make_axes_locatable(plt.gca())
-#     cax = divider.append_axes("right", "50%", pad="30%")
-#     plt.colorbar(im, cax=cax)
-#     plt.tight_layout()
+    ax.set_yticks(np.arange(len(y_keys)))
+    ax.set_yticklabels(y_keys, fontsize='xx-large')
+    ax.set_xticks(np.arange(len(x_keys)))
+    ax.set_xticklabels(x_keys)
+
+    divider = make_axes_locatable(plt.gca())
+    cax = divider.append_axes("right", "20%", pad="20%")
+    plt.colorbar(im, cax=cax)
+    plt.tight_layout()
+    plt.savefig(filename)
+    plt.close(fig)
+
+for i in range(3):
+	behav_arr = np.zeros((len(keys),1))
+	behav_arr.flat[:13] = y_loadings[0+ 13*i:13*(i+1),2]
+	heatmap((3,3), behav_arr, ' ', keys,'SCCA_MWQ_comp_%i'%(i+1))
 
 
-# behav_arr = y_loadings[0:13,2]
+def hierarchical_clustering(df):
+	labels = list(df.index) #rows categories
+	variables = list(df.columns) #column categories
+	from scipy.spatial.distance import pdist,squareform
+	row_dist = pd.DataFrame(squareform(pdist(df, metric='euclidean')), columns=labels, index=labels)
+
+	from scipy.cluster.hierarchy import linkage
+	row_clusters = linkage(pdist(df, metric='euclidean'), method='complete')
+	pd.DataFrame(row_clusters, 
+	             columns=['row label 1', 'row label 2', 'distance', 'no. of items in clust.'],
+	             index=['cluster %d' %(i+1) for i in range(row_clusters.shape[0])])
+
+	import matplotlib.pyplot as plt
+	# %matplotlib inline
+	from scipy.cluster.hierarchy import dendrogram
+	# reorder rows with respect to the clustering
+	row_dendr = dendrogram(row_clusters, labels=labels, orientation='left')
+	df_rowclust = df.ix[row_dendr['leaves']]
+	return df_rowclust, labels, variables
+
+# heatmap: wellbeing
+df = pd.read_excel('sourcedata\\PCA_questionnaires_wellbeing.xlsx', sheetname=0) #you can change to different sheet here
+df_rowclust, labels, variables = hierarchical_clustering(df)
+heatmap((10,3), df_rowclust, '',labels,'wellbeing.png')
+
+# heatmap: cognitive function
+df = pd.read_excel('sourcedata\\PCA_TaskScores_new.xlsx', sheetname=0) #you can change to different sheet here
+df_rowclust, labels, variables = hierarchical_clustering(df)
+heatmap((10,8), df_rowclust, ['SEM','EXE','GEN'], labels,'cognitivetasks.png')
+
