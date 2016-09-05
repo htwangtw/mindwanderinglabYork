@@ -92,15 +92,14 @@ plt.tight_layout()
 plt.savefig('SCCA_component.png')
 plt.close(fig)
 
-#slide 3: mind wandering component loading maps (bootstrapping results)
 def heatmap(size, mat, x_keys, y_keys, filename): 
     fig,ax=plt.subplots(figsize=size) #set plot size
     im = ax.matshow(mat, vmin=-0.9, vmax=0.9, cmap=plt.cm.RdBu_r)
 
     ax.set_yticks(np.arange(len(y_keys)))
-    ax.set_yticklabels(y_keys, fontsize='xx-large')
+    ax.set_yticklabels(y_keys, fontsize='x-large')
     ax.set_xticks(np.arange(len(x_keys)))
-    ax.set_xticklabels(x_keys)
+    ax.set_xticklabels(x_keys, rotation=90, fontsize='x-large')
 
     divider = make_axes_locatable(plt.gca())
     cax = divider.append_axes("right", "20%", pad="20%")
@@ -108,11 +107,6 @@ def heatmap(size, mat, x_keys, y_keys, filename):
     plt.tight_layout()
     plt.savefig(filename)
     plt.close(fig)
-
-for i in range(3):
-	behav_arr = np.zeros((len(keys),1))
-	behav_arr.flat[:13] = y_loadings[0+ 13*i:13*(i+1),2]
-	heatmap((3,3), behav_arr, ' ', keys,'SCCA_MWQ_comp_%i'%(i+1))
 
 
 def hierarchical_clustering(df):
@@ -133,15 +127,21 @@ def hierarchical_clustering(df):
 	# reorder rows with respect to the clustering
 	row_dendr = dendrogram(row_clusters, labels=labels, orientation='left')
 	df_rowclust = df.ix[row_dendr['leaves']]
-	return df_rowclust, labels, variables
+	return df_rowclust
+
+# heat map: MWQ from SCCA
+for i in range(3):
+    behav_arr = np.zeros((len(keys),1))
+    behav_arr.flat[:13] = y_loadings[0+ 13*i:13*(i+1),2]
+    heatmap((3,3), behav_arr, ' ', keys,'SCCA_MWQ_comp_%i'%(i+1))
 
 # heatmap: wellbeing
-df = pd.read_excel('sourcedata\\PCA_questionnaires_wellbeing.xlsx', sheetname=0) #you can change to different sheet here
-df_rowclust, labels, variables = hierarchical_clustering(df)
-heatmap((10,3), df_rowclust, '',labels,'wellbeing.png')
+df = pd.read_excel('sourcedata\\PCA_questionnaires_wellbeing.xlsx', sheetname=1) #you can change to different sheet here
+df_rowclust = hierarchical_clustering(df)
+heatmap((10,6), df_rowclust, list(df_rowclust.columns), list(df_rowclust.index),'questionniare_2.png')
 
 # heatmap: cognitive function
 df = pd.read_excel('sourcedata\\PCA_TaskScores_new.xlsx', sheetname=0) #you can change to different sheet here
 df_rowclust, labels, variables = hierarchical_clustering(df)
-heatmap((10,8), df_rowclust, ['SEM','EXE','GEN'], labels,'cognitivetasks.png')
+heatmap((10,8), df_rowclust, ['SEM','EXE','GEN'], row_dendr,'cognitivetasks.png')
 
