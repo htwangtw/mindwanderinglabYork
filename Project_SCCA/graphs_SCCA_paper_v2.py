@@ -39,7 +39,7 @@ RS_keys = ['1', '2', '3', '4', '1', '2', '3', '4', '1', '2', '3', '4', '5', '6',
 			'1', '2', '3', '4', '1', '2', '3', '4', '1', '2', '3', '4', '5', '6',
 			'1', '2', '3', '4', '1', '2', '3', '4', '1', '2', '3', '4', '5', '6',
 			]
-def RS_plot(mat, ax):
+def RSC_plot(mat, ax):
     im = ax.matshow(mat, vmin=-0.9, vmax=0.9, cmap=plt.cm.RdBu_r)
     ax.locator_params(nbins=3)
     ax.set_xticks(np.arange(n_areas*3))
@@ -79,6 +79,7 @@ def MWQ_plot(mat, ax):
     plt.colorbar(im, cax=cax)
     plt.tight_layout()
 
+# create graphs
 region_labels = np.load(expanduser('sourcedata\\data_cross_corr_Bzdok_DMN14_ROIS.npy'))
 brain_mat = x_loadings
 behav_arr = y_loadings
@@ -122,7 +123,6 @@ def hierarchical_clustering(df):
 	             index=['cluster %d' %(i+1) for i in range(row_clusters.shape[0])])
 
 	import matplotlib.pyplot as plt
-	# %matplotlib inline
 	from scipy.cluster.hierarchy import dendrogram
 	# reorder rows with respect to the clustering
 	row_dendr = dendrogram(row_clusters, labels=labels, orientation='left')
