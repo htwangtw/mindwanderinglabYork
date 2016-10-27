@@ -48,8 +48,7 @@ def getResp(startT, myClock):
     keyResp, thisRT, respRT = reset_output()
     while keyResp==None:
         show_questions()
-        keyResp, thisRT = get_keyboard(myClock,win, respkeylist=['1', '2', '3', '4', '5', '6', '7', 
-                                                                'num_1', 'num_2', 'num_3', 'num_4', 'num_5', 'num_6', 'num_7'])
+        keyResp, thisRT = get_keyboard(myClock,win, respkeylist=['1', '2', '3', '4', '5', '6', '7',])
         if not np.isnan(thisRT):
             respRT = (thisRT - startT) * 1000
         else:

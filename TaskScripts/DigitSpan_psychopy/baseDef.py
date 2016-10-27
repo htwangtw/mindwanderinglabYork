@@ -61,13 +61,19 @@ def quitEXP(endExpNow):
 def get_keyboard(myClock,win, respkeylist):
     keyResp = None
     thisRT = np.nan
-    keylist = ['escape', 'q'] + respkeylist
+    from string import letters, punctuation, digits
+    # allow number pad keys if there's numbers
+    for k in respkeylist:
+        if k in digits:
+            num_k = ['num_' + k]
+            respkeylist += num_k
+
+    keylist = ['escape'] + respkeylist
     for key, RT in event.getKeys(keyList=keylist, timeStamped=myClock):
-        if key in ['escape','q']:
+        if key in ['escape']:
             quitEXP(True)
         else:
-            if key in ['num_1', 'num_2', 'num_3', 'num_4', 'num_5', 'num_6', 'num_7', 'num_8', 'num_9']: # allow number pad keys
-                from string import letters, punctuation
+            if key in ['num_1', 'num_2', 'num_3', 'num_4', 'num_5', 'num_6', 'num_7', 'num_8', 'num_9', 'num_0']: # allow number pad keys
                 key = key.translate(None, letters) # no letters
                 key = key.translate(None, punctuation) #no underscore
             else: 
