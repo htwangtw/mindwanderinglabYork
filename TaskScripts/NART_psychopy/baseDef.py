@@ -66,8 +66,16 @@ def get_keyboard(myClock,win, respkeylist):
         if key in ['escape','q']:
             quitEXP(True)
         else:
+            if key in ['num_1', 'num_2', 'num_3', 'num_4', 'num_5', 'num_6', 'num_7', 'num_8', 'num_9']: # allow number pad keys
+                from string import letters, punctuation
+                key = key.translate(None, letters) # no letters
+                key = key.translate(None, punctuation) #no underscore
+            else: 
+                pass
             keyResp = key
             thisRT = RT
+    
+    
     return keyResp, thisRT
 
 #######################################################################################################################    

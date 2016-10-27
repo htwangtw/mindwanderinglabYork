@@ -73,12 +73,15 @@ def getMeta(startT, myClock):
     keyResp, thisRT, respRT, corr= reset_output()
     while keyResp==None:
         show_meta()
-        keyResp, thisRT = get_keyboard(myClock,win, respkeylist=['1', '2'])
+        keyResp, thisRT = get_keyboard(myClock,win, respkeylist=['y', 'n',])
         if not np.isnan(thisRT):
             respRT = (thisRT - startT)
         else:
             pass
-    keyResp = -(int(keyResp) - 2)
+    if keyResp == 'y':
+    	keyResp = 1
+    else:
+    	keyResp = 0
     return keyResp, respRT
 
 def show_questions(thisTrial):
@@ -90,7 +93,7 @@ def getResp(startT, myClock, thisTrial):
     keyResp, thisRT, respRT, corr = reset_output()
     while keyResp==None:
         show_questions(thisTrial)
-        keyResp, thisRT = get_keyboard(myClock,win, respkeylist=['1', '2', '3', '4'])
+        keyResp, thisRT = get_keyboard(myClock,win, respkeylist=['1', '2', '3', '4', 'num_1', 'num_2', 'num_3', 'num_4',])
         if not np.isnan(thisRT):
             respRT = thisRT - startT
             if keyResp == thisTrial['CorrAns']:

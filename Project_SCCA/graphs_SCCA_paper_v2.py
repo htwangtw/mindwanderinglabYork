@@ -136,12 +136,12 @@ for i in range(3):
     heatmap((3,3), behav_arr, ' ', keys,'SCCA_MWQ_comp_%i'%(i+1))
 
 # heatmap: wellbeing
-df = pd.read_excel('sourcedata\\PCA_questionnaires_wellbeing.xlsx', sheetname=1) #you can change to different sheet here
+df = pd.read_excel('graphs\\PCA_AllInOne.xlsx', sheetname=1) #you can change to different sheet here
 df_rowclust = hierarchical_clustering(df)
 heatmap((10,6), df_rowclust, list(df_rowclust.columns), list(df_rowclust.index),'questionniare_2.png')
 
 # heatmap: cognitive function
-df = pd.read_excel('sourcedata\\PCA_TaskScores_new.xlsx', sheetname=0) #you can change to different sheet here
-df_rowclust, labels, variables = hierarchical_clustering(df)
-heatmap((10,8), df_rowclust, ['SEM','EXE','GEN'], row_dendr,'cognitivetasks.png')
+df = pd.read_excel('graphs\\PCA_TaskScores_new.xlsx', sheetname=0) #you can change to different sheet here
+df_rowclust = hierarchical_clustering(df)
+heatmap((10,8), df_rowclust, ['SEM','EXE','GEN'], list(df_rowclust.index),'cognitivetasks.png')
 

@@ -107,7 +107,10 @@ def ans_screen(myClock, thisTrial, expInfo, block, f, i):
 	captured_string = ''
 	CaptureResp = True
 	while CaptureResp:
-		for key in event.getKeys(keyList=['1', '2', '3', '4', '5', '6', '7', '8', '9', 'return', 'backspace', 'escape']):
+		for key in event.getKeys(keyList=['1', '2', '3', '4', '5', '6', '7', '8', '9', 
+											'num_1', 'num_2', 'num_3', 'num_4', 'num_5', 'num_6', 'num_7', 'num_8', 'num_9', 
+											'return', 'backspace', 'escape']):
+			# TO DO - make this function to recognise number pad input as normal numbers
 			if key == 'return':
 				CaptureResp = False
 				break

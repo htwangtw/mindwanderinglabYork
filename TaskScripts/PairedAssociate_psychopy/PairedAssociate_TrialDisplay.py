@@ -48,7 +48,8 @@ def getResp(startT, myClock):
     keyResp, thisRT, respRT = reset_output()
     while keyResp==None:
         show_questions()
-        keyResp, thisRT = get_keyboard(myClock,win, respkeylist=['1', '2', '3', '4', '5', '6', '7'])
+        keyResp, thisRT = get_keyboard(myClock,win, respkeylist=['1', '2', '3', '4', '5', '6', '7', 
+                                                                'num_1', 'num_2', 'num_3', 'num_4', 'num_5', 'num_6', 'num_7'])
         if not np.isnan(thisRT):
             respRT = (thisRT - startT) * 1000
         else:
@@ -217,9 +218,11 @@ def ans_screen(myClock, thisTrial, condition, question_length=10):
 
 def block_end(countCORR, attempts):
     if countCORR >70:
-        showmessage = 'Your accuracy rate is %f'%(countCORR) + '%' + '. Well done!' + '\n\n\nPess SPACE to continue.'
+        # showmessage = 'Your accuracy rate is %f'%(countCORR) + '%' + '. Well done!' + '\n\n\nPess SPACE to continue.'
+        showmessage = 'Well done!' + '\n\n\nPess SPACE to continue.'
     else:
-        showmessage = 'Your accuracy rate is %f'%(countCORR) + '%' + '. Good job, but you need to reach 70' + '%' + '. \n\nYou have %i chance(s) left. \n\n\n\nPess SPACE to continue.'%attempts
+        # showmessage = 'Your accuracy rate is %f'%(countCORR) + '%' + '. Good job, but you need to reach 70' + '%' + '. \n\nYou have %i chance(s) left. \n\n\n\nPess SPACE to continue.'%attempts
+        showmessage = 'Good job, but you need to try again' + '. \n\nYou have %i chance(s) left. \n\n\n\nPess SPACE to continue.'%attempts
     msgTxt.setText(showmessage)
     msgTxt.draw()
     win.flip()
