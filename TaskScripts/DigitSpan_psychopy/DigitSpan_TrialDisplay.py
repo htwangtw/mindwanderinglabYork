@@ -122,10 +122,10 @@ def ans_screen(myClock, thisTrial, expInfo, block, f, i):
 			else:
 				from string import letters, punctuation, digits
 				if key in ['num_1', 'num_2', 'num_3', 'num_4', 'num_5', 'num_6', 'num_7', 'num_8', 'num_9', ]: # allow number pad keys
-	                key = key.translate(None, letters) # no letters
-	                key = key.translate(None, punctuation) #no underscore
-	            else: 
-	                pass
+					key = key.translate(None, letters) # no letters
+					key = key.translate(None, punctuation) #no underscore
+				else: 
+					pass
 				captured_string += key
 				updateTheResponse(captured_string)
 	thisRT = myClock.getTime()
