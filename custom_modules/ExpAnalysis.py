@@ -4,9 +4,9 @@ import pandas as pd
 import glob, os, sys
 import itertools
 
-def get_DIRs(DATA_PATH, subset=False, PPT_ID=[]):
+def get_DIRs(DATA_DIR, subset, PPT_ID):
 	'''
-	DATA_PATH: string; 
+	DATA_DIR: string; 
 	raw data directory with filename patten; 
 	i.e. DATA_DIR = 'R:\LabData\CohortData\TaskSwitch\*_taskswitching*.csv'
 
@@ -17,10 +17,10 @@ def get_DIRs(DATA_PATH, subset=False, PPT_ID=[]):
 	A list of participant number; This must match the IDs on the csv filename
 
 	'''
-	DATA_PATH = sorted(glob.glob(DATA_DIR))
+	DATA_DIR = sorted(glob.glob(DATA_DIR))
 	if subset:
 		check_id = []
-		for d in DATA_PATH:
+		for d in DATA_DIR:
 			check_id.append(int(d.split(os.sep)[-1].split('_')[0]))
 		check_id = sorted(check_id)
 
@@ -28,13 +28,13 @@ def get_DIRs(DATA_PATH, subset=False, PPT_ID=[]):
 			sys.exit('The participant ID list and the log files doesn\'t match. Please check your data under %s and variable PPT_ID.' %DATA_DIR)
 
 		DIRs = []
-		for d in DATA_PATH:
+		for d in DATA_DIR:
 			cur_id = int(d.split(os.sep)[-1].split('_')[0])
 			if cur_id in PPT_ID:
 				DIRs.append(d)
 
 	else:
-		DIRs = DATA_PATH
+		DIRs = DATA_DIR
 
 	return DIRs
 
@@ -64,10 +64,7 @@ def concat_data_csvs(DIRs, Lable_idx, Label_IV, Label_DV):
 
 	'''
 	def label_check(DIRs, Label_var):
-		'''
-		Check the labels are correctly spelt.
-		This is just a sanity check on the first file.
-		'''
+
 		#load a dummy file to check the informations
 		tmp_dat = pd.read_csv(DIRs[0], sep=',', header=0)
 		tmp_keys = tmp_dat.keys().values.tolist()
@@ -79,6 +76,7 @@ def concat_data_csvs(DIRs, Lable_idx, Label_IV, Label_DV):
 	Label_var = Label_IV + Label_DV + Lable_idx
 
 	label_check(DIRs, Label_var)
+
 	# create a empty entry for storing data frames
 	df_collect = dict()
 	for p in DIRs:
@@ -97,12 +95,15 @@ def concat_data_csvs(DIRs, Lable_idx, Label_IV, Label_DV):
 		# get id
 		# use the id on the file name as the acutal id
 		cur_id = int(p.split(os.sep)[-1].split('_')[0])
-		df_cur_dat[Lable_idx[0]] = list(itertools.repeat(cur_id, df_cur_dat.shape[0]))
+		if len(Lable_idx) > 0:
+			df_cur_dat[Lable_idx[0]] = list(itertools.repeat(cur_id, df_cur_dat.shape[0]))
+		else:
+			df_cur_dat['IDNO'] = list(itertools.repeat(cur_id, df_cur_dat.shape[0]))
 
 		# save the participant's data to a dictionary
 		df_collect[p.split(os.sep)[-1]] = df_cur_dat
 		
-		return pd.concat(df_collect, axis=0) # concatenate all the dataframes into long form
+	return pd.concat(df_collect, axis=0) # concatenate all the dataframes into long form
 
 def save_csv(df, RESULT_DIR, EXPNAME, FILENAME): 
 	'''
@@ -115,4 +116,4 @@ def save_csv(df, RESULT_DIR, EXPNAME, FILENAME):
 	    if exception.errno != errno.EEXIST:
 	        raise    
 	#dump to disc
-	df.to_csv(RESULT_DIR + os.sep + EXPNAME + '_' + FILENAME + '.csv', index=False)
+	df.to_csv(RESULT_DIR + os.sep + EXPNAME + '_' + FILENAME + '.csv', index=True)
