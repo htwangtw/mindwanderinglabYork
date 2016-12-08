@@ -269,15 +269,20 @@ def recall(myClock, stimuli_list, expInfo, f):
 
         write_datalog(f, data='%i,%s,%s,%s,%s,%i\n'
             %(attempt, 'accuracy', '', '', '', acc))
-        if acc >= 70 or attempt == 3:
-            block_end(acc, attempts)
+        
+        if expInfo['conditions'] == 'encoding': 
+            if acc >= 70 or attempt == 3:
+                block_end(acc, attempts)
+                continueTest = False
+                
+            else:
+                attempts -= 1
+                block_end(acc, attempts)
+                continueTest = True
+                
+        else: # expInfo['conditions'] == 'delayed'
             continueTest = False
-        elif expInfo['conditions'] == 'delayed':
-            continueTest = False
-        else:
-            attempts -= 1
-            block_end(acc, attempts)
-            continueTest = True
+
 
 #############################################################################################################
 
